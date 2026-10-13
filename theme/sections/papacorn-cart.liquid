@@ -1,0 +1,135 @@
+{{ 'papacorn-commerce.css' | asset_url | stylesheet_tag }}
+{% liquid
+  assign bundle_url = section.settings.bundle_url | default: '/pages/make-your-bundle'
+%}
+<section class="pc-page pc-cart" aria-labelledby="pc-cart-title-{{ section.id }}">
+  <div class="pc-container">
+    <div class="pc-cart-heading">
+      <div>
+        <p class="pc-kicker">{{ 'papacorn.commerce.cart_kicker' | t }}</p>
+        <h1 class="pc-heading" id="pc-cart-title-{{ section.id }}">{{ 'papacorn.commerce.cart_title' | t }}</h1>
+      </div>
+      {% if cart.item_count > 0 %}<p class="pc-cart-count">{{ 'papacorn.commerce.cart_count' | t: count: cart.item_count }}</p>{% endif %}
+    </div>
+    {% if cart.item_count == 0 %}
+      <div class="pc-cart-empty">
+        <div class="pc-cart-empty-pop" aria-hidden="true">✦</div>
+        <h2>{{ 'papacorn.commerce.empty_title' | t }}</h2>
+        <p>{{ 'papacorn.commerce.empty_text' | t }}</p>
+        <a class="pc-button" href="{{ bundle_url }}">{{ 'papacorn.commerce.bundle' | t }} <span aria-hidden="true">↗</span></a>
+        <a class="pc-cart-continue" href="{{ routes.all_products_collection_url }}">{{ 'papacorn.commerce.back_to_flavours' | t }}</a>
+      </div>
+    {% else %}
+      <form class="pc-cart-form" action="{{ routes.cart_url }}" method="post" id="pc-cart-form-{{ section.id }}">
+        <div class="pc-cart-layout">
+          <div class="pc-cart-main">
+            <ul class="pc-cart-lines" role="list">
+              {% for item in cart.items %}
+                {% liquid
+                  assign quantity_min = item.variant.quantity_rule.min | default: 1
+                  assign quantity_step = item.variant.quantity_rule.increment | default: 1
+                  assign quantity_max = item.variant.quantity_rule.max
+                  if quantity_max != blank
+                    assign variant_cart_quantity = cart | item_count_for_variant: item.variant_id
+                    assign quantity_max = quantity_max | minus: variant_cart_quantity | plus: item.quantity | at_least: quantity_min
+                  endif
+                  assign line_quantity_id = 'pc-cart-quantity-' | append: section.id | append: '-' | append: forloop.index
+                %}
+                <li class="pc-cart-line" data-line-key="{{ item.key | escape }}">
+                  <a class="pc-cart-image" href="{{ item.url }}" aria-label="{{ item.product.title | escape }}">
+                    {% if item.image != blank %}{{ item.image | image_url: width: 360 | image_tag: widths: '120, 180, 240, 360', sizes: '(min-width: 750px) 132px, 96px', loading: 'lazy', alt: item.image.alt }}{% endif %}
+                  </a>
+                  <div class="pc-cart-line-details">
+                    <h2><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h2>
+                    {% unless item.product.has_only_default_variant %}<p class="pc-cart-variant">{{ item.variant.title | escape }}</p>{% endunless %}
+                    {% if item.selling_plan_allocation != blank %}<p class="pc-cart-plan">{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>{% endif %}
+                    {% if item.properties.size > 0 %}
+                      <dl class="pc-cart-properties">
+                        {% for property in item.properties %}
+                          {% assign property_first_character = property.first | slice: 0 %}
+                          {% if property.last != blank and property_first_character != '_' %}
+                            <div><dt>{{ property.first | escape }}</dt><dd>{{ property.last | escape }}</dd></div>
+                          {% endif %}
+                        {% endfor %}
+                      </dl>
+                    {% endif %}
+                    <p class="pc-cart-unit-price">
+                      {% if item.original_price > item.final_price %}<s>{{ item.original_price | money }}</s>{% endif %}
+                      <span>{{ item.final_price | money }}</span> <span class="pc-cart-per-bag">{{ 'papacorn.commerce.per_bag' | t }}</span>
+                    </p>
+                    {% if item.line_level_discount_allocations.size > 0 %}
+                      <ul class="pc-cart-line-discounts" role="list">
+                        {% for discount in item.line_level_discount_allocations %}<li>{{ discount.discount_application.title | escape }} <span>−{{ discount.amount | money }}</span></li>{% endfor %}
+                      </ul>
+                    {% endif %}
+                    <div class="pc-cart-line-controls">
+                      <label for="{{ line_quantity_id }}" class="pc-cart-quantity-label">{{ 'papacorn.commerce.quantity' | t }}</label>
+                      <input id="{{ line_quantity_id }}" class="pc-cart-quantity" type="number" name="updates[]" min="{{ quantity_min }}"{% if quantity_max != blank %} max="{{ quantity_max }}"{% endif %} step="{{ quantity_step }}" value="{{ item.quantity }}" inputmode="numeric" required aria-label="{{ 'papacorn.commerce.quantity_label' | t: product: item.product.title | escape_once }}">
+                      <a class="pc-cart-remove" href="{{ item.url_to_remove | escape }}" aria-label="{{ 'papacorn.commerce.remove_label' | t: product: item.product.title | escape_once }}">{{ 'papacorn.commerce.remove' | t }}</a>
+                    </div>
+                  </div>
+                  <div class="pc-cart-line-total">
+                    <span class="pc-cart-total-label">{{ 'papacorn.commerce.item_total' | t }}</span>
+                    {% if item.original_line_price > item.final_line_price %}<s>{{ item.original_line_price | money }}</s>{% endif %}
+                    <strong>{{ item.final_line_price | money }}</strong>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+            <div class="pc-cart-update-row">
+              <a class="pc-cart-continue" href="{{ routes.all_products_collection_url }}"><span aria-hidden="true">←</span> {{ 'papacorn.commerce.continue_shopping' | t }}</a>
+              <button class="pc-cart-update" type="submit" name="update" value="update">{{ 'papacorn.commerce.update_cart' | t }}</button>
+            </div>
+            {% if cart.attributes.size > 0 %}
+              <dl class="pc-cart-attributes">
+                {% for attribute in cart.attributes %}
+                  {% assign attribute_suffix = attribute.first | slice: -2, 2 %}
+                  {% if attribute.last != blank and attribute_suffix != '__' %}
+                    <div><dt>{{ attribute.first | escape }}</dt><dd>{{ attribute.last | escape }}</dd></div>
+                  {% endif %}
+                {% endfor %}
+              </dl>
+              {% for attribute in cart.attributes %}
+                {% assign attribute_suffix = attribute.first | slice: -2, 2 %}
+                {% if attribute.last != blank and attribute_suffix != '__' %}<input type="hidden" name="attributes[{{ attribute.first | escape }}]" value="{{ attribute.last | escape }}">{% endif %}
+              {% endfor %}
+            {% endif %}
+            {% if section.settings.show_note %}
+              <div class="pc-cart-note">
+                <label for="pc-cart-note-{{ section.id }}">{{ 'papacorn.commerce.note' | t }}</label>
+                <textarea id="pc-cart-note-{{ section.id }}" name="note" rows="3">{{ cart.note | escape }}</textarea>
+              </div>
+            {% endif %}
+          </div>
+          <aside class="pc-cart-summary" aria-label="{{ 'papacorn.commerce.cart_details' | t | escape_once }}">
+            <p class="pc-kicker">{{ 'papacorn.commerce.cart_details' | t }}</p>
+            <dl class="pc-cart-totals">
+              <div><dt>{{ 'papacorn.commerce.subtotal' | t }}</dt><dd>{{ cart.items_subtotal_price | money }}</dd></div>
+              {% for discount in cart.cart_level_discount_applications %}<div class="pc-cart-discount"><dt>{{ discount.title | escape }}</dt><dd>−{{ discount.total_allocated_amount | money }}</dd></div>{% endfor %}
+              <div class="pc-cart-grand-total"><dt>{{ 'papacorn.commerce.total' | t }}</dt><dd>{{ cart.total_price | money }}</dd></div>
+            </dl>
+            <p class="pc-cart-checkout-note">{{ 'papacorn.commerce.checkout_note' | t }}</p>
+            <button class="pc-button pc-cart-checkout" type="submit" name="checkout" value="checkout">{{ 'papacorn.commerce.checkout' | t }} <span aria-hidden="true">↗</span></button>
+            <div class="pc-cart-bundle">
+              <p>{{ 'papacorn.commerce.bundle_text' | t }}</p>
+              <a href="{{ bundle_url }}">{{ 'papacorn.commerce.bundle' | t }} <span aria-hidden="true">↗</span></a>
+            </div>
+          </aside>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "PapaCorn cart",
+  "tag": "div",
+  "class": "pc-cart-section",
+  "settings": [
+    { "type": "checkbox", "id": "show_note", "label": "Show order note", "default": true },
+    { "type": "url", "id": "bundle_url", "label": "Bundle page" }
+  ],
+  "presets": [{ "name": "PapaCorn cart" }],
+  "enabled_on": { "templates": ["cart"] }
+}
+{% endschema %}

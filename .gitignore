@@ -1,0 +1,15 @@
+node_modules/
+.validation/
+.base/
+.shopify/
+.env
+.env.*
+*.log
+*.tmp
+*.zip
+.DS_Store
+Thumbs.db
+reference-home.html
+remote-state.json
+publication-verification.json
+*.local.*

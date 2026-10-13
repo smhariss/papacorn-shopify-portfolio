@@ -1,0 +1,238 @@
+{{ 'papacorn-bundle.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'papacorn-bundle.js' | asset_url }}" type="module"></script>
+{% liquid
+  assign bundle_currency = cart.currency.iso_code | default: shop.currency
+  assign bundle_locale = localization.language.iso_code | default: 'en'
+  assign bundle_existing_offer_quantity = 0
+  for bundle_cart_item in cart.items
+    for bundle_block in section.blocks
+      if bundle_block.settings.product != blank and bundle_cart_item.product.id == bundle_block.settings.product.id
+        assign bundle_existing_offer_quantity = bundle_existing_offer_quantity | plus: bundle_cart_item.quantity
+        break
+      endif
+    endfor
+  endfor
+%}
+<section
+  id="pc-bundle-{{ section.id }}"
+  class="pc-page pc-bundle"
+  data-papacorn-bundle
+  data-selection-count="0"
+  data-currency="{{ bundle_currency | escape }}"
+  data-locale="{{ bundle_locale | escape }}"
+  data-cart-url="{{ routes.cart_url }}"
+  data-existing-offer-quantity="{{ bundle_existing_offer_quantity }}"
+  aria-labelledby="pc-bundle-heading-{{ section.id }}"
+>
+  <div class="pc-container">
+    <div class="pc-bundle-intro">
+      <div>
+        <p class="pc-kicker">{{ 'papacorn.bundle.kicker' | t }}</p>
+        <h1 id="pc-bundle-heading-{{ section.id }}" class="pc-heading pc-bundle-heading">{{ section.settings.heading | escape }}</h1>
+        <p class="pc-bundle-copy">{{ section.settings.subheading | escape }}</p>
+      </div>
+      <div class="pc-bundle-offer">
+        <strong>{{ 'papacorn.bundle.offer_amount' | t }}</strong>
+        <span>{{ 'papacorn.bundle.offer_threshold' | t }}<small>{{ 'papacorn.bundle.offer_mix' | t }}</small></span>
+      </div>
+    </div>
+    <form action="{{ routes.cart_add_url }}" method="post" class="pc-bundle-layout" data-bundle-form novalidate>
+      <div>
+        <div class="pc-bundle-grid-heading">
+          <h2>{{ 'papacorn.bundle.choose_flavours' | t }}</h2>
+          <p>{{ 'papacorn.bundle.bag_size' | t }}</p>
+        </div>
+        <div class="pc-bundle-grid">
+          {% for block in section.blocks %}
+            {% liquid
+              assign bundle_product = block.settings.product
+              assign bundle_variant = bundle_product.selected_or_first_available_variant
+              assign bundle_title = block.settings.fallback_title
+              assign bundle_art = block.settings.cutout | default: bundle_product.featured_image
+              assign bundle_price = block.settings.fallback_price | times: 100
+              assign bundle_available = false
+              assign bundle_preview_price = true
+              assign bundle_options = false
+              assign bundle_min = 1
+              assign bundle_increment = 1
+              assign bundle_max = blank
+              if bundle_product != blank
+                assign bundle_title = bundle_product.title
+                if bundle_variant != blank
+                  assign bundle_price = bundle_variant.price
+                  assign bundle_preview_price = false
+                endif
+                if bundle_product.variants.size > 1 or bundle_product.requires_selling_plan or bundle_variant.requires_selling_plan
+                  assign bundle_options = true
+                  assign bundle_preview_price = true
+                elsif bundle_product.published_at != blank and bundle_product.available and bundle_variant.available
+                  assign bundle_available = true
+                  assign bundle_min = bundle_variant.quantity_rule.min | default: 1
+                  assign bundle_increment = bundle_variant.quantity_rule.increment | default: 1
+                  assign bundle_max = bundle_variant.quantity_rule.max
+                  assign bundle_cart_quantity = cart | item_count_for_variant: bundle_variant.id
+                  if bundle_cart_quantity > 0
+                    assign bundle_min = bundle_increment
+                  endif
+                  if bundle_max != blank
+                    assign bundle_max = bundle_max | minus: bundle_cart_quantity | at_least: 0
+                    if bundle_max < bundle_min
+                      assign bundle_available = false
+                    endif
+                  endif
+                endif
+                if bundle_product.published_at == blank
+                  assign bundle_preview_price = true
+                endif
+              endif
+              assign bundle_input_id = 'pc-bundle-quantity-' | append: section.id | append: '-' | append: block.id
+              assign bundle_note_id = 'pc-bundle-note-' | append: section.id | append: '-' | append: block.id
+              assign bundle_error_id = bundle_input_id | append: '-error'
+            %}
+            <article
+              class="pc-bundle-card"
+              data-bundle-card
+              data-title="{{ bundle_title | escape }}"
+              data-variant-id="{% if bundle_available %}{{ bundle_variant.id }}{% endif %}"
+              data-price="{{ bundle_price }}"
+              data-available="{{ bundle_available }}"
+              data-preview-price="{{ bundle_preview_price }}"
+              data-min="{{ bundle_min }}"
+              data-increment="{{ bundle_increment }}"
+              data-max="{{ bundle_max }}"
+              data-selected="false"
+              style="--pc-bundle-card: {{ block.settings.background }}; --pc-bundle-ink: {{ block.settings.ink }}; --pc-bundle-tilt: {% cycle '-7deg', '5deg', '-4deg' %};"
+              {{ block.shopify_attributes }}
+            >
+              <div class="pc-bundle-card-top">
+                <span class="pc-bundle-flavour-number" aria-hidden="true">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+                <span class="pc-bundle-selected-mark" aria-hidden="true">✓</span>
+              </div>
+              <div class="pc-bundle-art">
+                {% if bundle_art != blank %}
+                  {{ bundle_art | image_url: width: 520 | image_tag: loading: 'lazy', widths: '220, 360, 520', sizes: '(min-width: 1200px) 230px, (min-width: 750px) 28vw, 40vw', alt: bundle_title, class: 'pc-bundle-packet', data-bundle-art: '' }}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'pc-bundle-placeholder' }}
+                {% endif %}
+              </div>
+              <div class="pc-bundle-card-content">
+                <h3>{{ bundle_title | escape }}</h3>
+                <p class="pc-bundle-unit-price">{{ bundle_price | money }} <span>· {{ 'papacorn.bundle.bag_size' | t }}</span></p>
+                <p id="{{ bundle_note_id }}" class="pc-bundle-card-note">
+                  {% if bundle_product == blank or bundle_product.published_at == blank %}
+                    {{ 'papacorn.bundle.preview_card' | t }}
+                  {% elsif bundle_options %}
+                    {{ 'papacorn.bundle.options_card' | t }}
+                  {% elsif bundle_available == false %}
+                    {{ 'papacorn.bundle.sold_out' | t }}
+                  {% else %}
+                    {% if bundle_min > 1 or bundle_increment > 1 or bundle_max != blank %}
+                      <span>{{ 'papacorn.bundle.minimum' | t: quantity: bundle_min }}</span>
+                      {% if bundle_increment > 1 %}<span> · {{ 'papacorn.bundle.increment' | t: quantity: bundle_increment }}</span>{% endif %}
+                      {% if bundle_max != blank %}<span> · {{ 'papacorn.bundle.maximum' | t: quantity: bundle_max }}</span>{% endif %}
+                    {% else %}
+                      {{ 'papacorn.bundle.available_card' | t }}
+                    {% endif %}
+                  {% endif %}
+                </p>
+                <label class="pc-bundle-quantity-label" for="{{ bundle_input_id }}">{{ 'papacorn.bundle.quantity' | t }}</label>
+                <div class="pc-bundle-quantity">
+                  <button type="button" data-bundle-minus data-bundle-step="-1" aria-label="{{ 'papacorn.bundle.decrease' | t: flavour: bundle_title | escape_once }}" disabled><span aria-hidden="true">−</span></button>
+                  <input id="{{ bundle_input_id }}" type="number" min="0" step="1"{% if bundle_max != blank %} max="{{ bundle_max }}"{% endif %} value="0" inputmode="numeric" data-bundle-quantity aria-describedby="{{ bundle_note_id }} {{ bundle_error_id }}" aria-invalid="false" disabled>
+                  <button type="button" data-bundle-plus data-bundle-step="1" aria-label="{{ 'papacorn.bundle.increase' | t: flavour: bundle_title | escape_once }}" disabled><span aria-hidden="true">+</span></button>
+                </div>
+                <p id="{{ bundle_error_id }}" class="pc-bundle-input-error" data-bundle-input-error hidden>{{ 'papacorn.bundle.invalid_quantity' | t }}</p>
+                <div class="pc-bundle-card-bottom">
+                  {% if bundle_product != blank %}
+                    <a href="{{ bundle_product.url }}">{% if bundle_options %}{{ 'papacorn.bundle.choose_options' | t }}{% else %}{{ 'papacorn.bundle.view_flavour' | t }}{% endif %}<span aria-hidden="true"> ↗</span></a>
+                  {% else %}
+                    <span>{{ 'papacorn.bundle.preview_price' | t }}</span>
+                  {% endif %}
+                  <span data-bundle-line-total>{{ 0 | money }}</span>
+                </div>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+      <aside class="pc-bundle-summary" aria-labelledby="pc-bundle-summary-heading-{{ section.id }}">
+        <div class="pc-bundle-summary-heading">
+          <p class="pc-bundle-summary-kicker">{{ 'papacorn.bundle.summary_kicker' | t }}</p>
+          <h2 id="pc-bundle-summary-heading-{{ section.id }}">{{ 'papacorn.bundle.your_bundle' | t }}</h2>
+        </div>
+        <div class="pc-bundle-selection-wrap">
+          <p class="pc-bundle-empty" data-bundle-empty>{{ 'papacorn.bundle.empty_selection' | t }}</p>
+          <ul class="pc-bundle-selection" data-bundle-selection aria-label="{{ 'papacorn.bundle.selected_flavours' | t | escape }}"></ul>
+        </div>
+        <div class="pc-bundle-totals" aria-live="polite" aria-atomic="true">
+          <p><span>{{ 'papacorn.bundle.bags_selected' | t }}</span><strong data-bundle-count>0</strong></p>
+          <p class="pc-bundle-subtotal"><span data-bundle-subtotal-label>{{ 'papacorn.bundle.subtotal' | t }}</span><strong data-bundle-subtotal>{{ 0 | money }}</strong></p>
+          <p class="pc-bundle-savings" data-bundle-savings-row hidden><span>{{ 'papacorn.bundle.savings_preview' | t }}</span><strong data-bundle-savings>{{ 0 | money }}</strong></p>
+          <p class="pc-bundle-total" data-bundle-total-row hidden><span data-bundle-total-label>{{ 'papacorn.bundle.estimated_total' | t }}</span><strong data-bundle-total>{{ 0 | money }}</strong></p>
+          <p class="pc-bundle-offer-progress" data-bundle-offer-progress>{{ 'papacorn.bundle.offer_remaining' | t: quantity: 5 }}</p>
+        </div>
+        <p class="pc-bundle-offer-note" data-bundle-offer-note>{{ 'papacorn.bundle.offer_note' | t }}</p>
+        <p class="pc-bundle-status" data-bundle-status role="status">{{ 'papacorn.bundle.pick_flavours' | t }}</p>
+        <p class="pc-bundle-error" data-bundle-error role="alert" tabindex="-1" hidden></p>
+        <div class="pc-bundle-actions">
+          <button class="pc-button pc-bundle-submit" type="submit" data-bundle-submit disabled hidden>{{ 'papacorn.bundle.add_to_cart' | t }}</button>
+          <button class="pc-bundle-clear" type="button" data-bundle-clear hidden>{{ 'papacorn.bundle.clear' | t }}</button>
+        </div>
+        <p class="pc-bundle-cart-link"><a href="{{ routes.cart_url }}">{{ 'papacorn.bundle.view_cart' | t }} <span aria-hidden="true">↗</span></a></p>
+        <noscript><p class="pc-bundle-nojs">{{ 'papacorn.bundle.nojs' | t }}</p></noscript>
+      </aside>
+    </form>
+  </div>
+  <script type="application/json" data-bundle-messages>
+    {
+      "add_to_cart": {{ 'papacorn.bundle.add_to_cart' | t | json }},
+      "adding": {{ 'papacorn.bundle.adding' | t | json }},
+      "subtotal": {{ 'papacorn.bundle.subtotal' | t | json }},
+      "preview_subtotal": {{ 'papacorn.bundle.preview_subtotal' | t | json }},
+      "estimated_total": {{ 'papacorn.bundle.estimated_total' | t | json }},
+      "preview_total": {{ 'papacorn.bundle.preview_total' | t | json }},
+        "offer_remaining": {{ 'papacorn.bundle.offer_remaining' | t: quantity: '[quantity]' | json }},
+      "offer_remaining_one": {{ 'papacorn.bundle.offer_remaining_one' | t | json }},
+      "offer_unlocked": {{ 'papacorn.bundle.offer_unlocked' | t | json }},
+      "offer_preview_unlocked": {{ 'papacorn.bundle.offer_preview_unlocked' | t | json }},
+      "offer_note": {{ 'papacorn.bundle.offer_note' | t | json }},
+        "offer_cart_bags": {{ 'papacorn.bundle.offer_cart_bags' | t: quantity: '[quantity]' | json }},
+      "offer_preview_note": {{ 'papacorn.bundle.offer_preview_note' | t | json }},
+      "pick_flavours": {{ 'papacorn.bundle.pick_flavours' | t | json }},
+      "ready": {{ 'papacorn.bundle.ready' | t | json }},
+      "empty_error": {{ 'papacorn.bundle.empty_error' | t | json }},
+      "invalid_quantity": {{ 'papacorn.bundle.invalid_quantity' | t | json }},
+      "quantity_rule": {{ 'papacorn.bundle.quantity_rule' | t | json }},
+      "unavailable": {{ 'papacorn.bundle.unavailable' | t | json }},
+      "inventory_error": {{ 'papacorn.bundle.inventory_error' | t | json }},
+      "cart_error": {{ 'papacorn.bundle.cart_error' | t | json }},
+      "network_error": {{ 'papacorn.bundle.network_error' | t | json }}
+    }
+  </script>
+</section>
+{% schema %}
+{
+  "name": "PapaCorn bundle",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Make your bundle" },
+    { "type": "textarea", "id": "subheading", "label": "Introduction", "default": "Pick your flavours. Set your quantities. Make it yours." }
+  ],
+  "max_blocks": 9,
+  "blocks": [
+    {
+      "type": "flavour",
+      "name": "Flavour",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "image_picker", "id": "cutout", "label": "Packet cutout" },
+        { "type": "text", "id": "fallback_title", "label": "Preview title", "default": "PapaCorn flavour" },
+        { "type": "number", "id": "fallback_price", "label": "Preview price in rupees", "default": 150 },
+        { "type": "color", "id": "background", "label": "Card colour", "default": "#FFD229" },
+        { "type": "color", "id": "ink", "label": "Text colour", "default": "#321064" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "PapaCorn bundle" }]
+}
+{% endschema %}

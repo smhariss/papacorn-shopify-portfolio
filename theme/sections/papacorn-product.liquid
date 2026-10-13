@@ -1,0 +1,229 @@
+{{ 'papacorn-commerce.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'papacorn-product.js' | asset_url }}" defer></script>
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign product_form_id = 'pc-product-form-' | append: section.id
+  assign quantity_id = 'pc-product-quantity-' | append: section.id
+  assign variant_id = 'pc-product-variant-' | append: section.id
+  assign fallback_image = product.featured_image
+  for image in product.images
+    if image.src contains '-cutout'
+      assign fallback_image = image
+      break
+    endif
+  endfor
+  assign current_image = current_variant.featured_image | default: fallback_image
+  assign media_background = section.settings.media_background
+  assign media_ink = section.settings.media_ink
+  assign bundle_url = section.settings.bundle_url | default: '/pages/make-your-bundle'
+  assign flavour_description_key = ''
+  assign flavour_profile_key = ''
+  case product.handle
+    when 'sweet-salted'
+      assign flavour_description_key = 'papacorn.commerce.description_sweet_salted'
+      assign flavour_profile_key = 'papacorn.commerce.profile_sweet_salted'
+    when 'cheese'
+      assign flavour_description_key = 'papacorn.commerce.description_cheese'
+      assign flavour_profile_key = 'papacorn.commerce.profile_cheese'
+    when 'hot-spicy'
+      assign flavour_description_key = 'papacorn.commerce.description_hot_spicy'
+      assign flavour_profile_key = 'papacorn.commerce.profile_hot_spicy'
+    when 'choc-corn'
+      assign flavour_description_key = 'papacorn.commerce.description_choc_corn'
+      assign flavour_profile_key = 'papacorn.commerce.profile_choc_corn'
+    when 'butter-scotch'
+      assign flavour_description_key = 'papacorn.commerce.description_butter_scotch'
+      assign flavour_profile_key = 'papacorn.commerce.profile_butter_scotch'
+    when 'caramel-peanut'
+      assign flavour_description_key = 'papacorn.commerce.description_caramel_peanut'
+      assign flavour_profile_key = 'papacorn.commerce.profile_caramel_peanut'
+    when 'plain'
+      assign flavour_description_key = 'papacorn.commerce.description_plain'
+      assign flavour_profile_key = 'papacorn.commerce.profile_plain'
+    when 'toffee'
+      assign flavour_description_key = 'papacorn.commerce.description_toffee'
+      assign flavour_profile_key = 'papacorn.commerce.profile_toffee'
+    when 'bbq'
+      assign flavour_description_key = 'papacorn.commerce.description_bbq'
+      assign flavour_profile_key = 'papacorn.commerce.profile_bbq'
+  endcase
+  assign rule_min = current_variant.quantity_rule.min | default: 1
+  assign rule_step = current_variant.quantity_rule.increment | default: 1
+  assign cart_quantity = cart | item_count_for_variant: current_variant.id
+  assign add_min = rule_min
+  if cart_quantity > 0
+    assign add_min = rule_step
+  endif
+  assign add_max = current_variant.quantity_rule.max
+  assign maximum_reached = false
+  if add_max != blank
+    assign add_max = add_max | minus: cart_quantity | at_least: 0
+    if add_max < add_min
+      assign maximum_reached = true
+    endif
+  endif
+  assign product_purchasable = false
+  if product != blank and product.published_at != blank and product.requires_selling_plan == false
+    assign product_purchasable = true
+  endif
+  if section.settings.use_flavour_color
+    case product.handle
+      when 'sweet-salted'
+        assign media_background = '#27C7C2'
+        assign media_ink = '#321064'
+      when 'cheese'
+        assign media_background = '#FFD229'
+        assign media_ink = '#321064'
+      when 'hot-spicy'
+        assign media_background = '#BE1B38'
+        assign media_ink = '#FFF8E7'
+      when 'choc-corn'
+        assign media_background = '#513125'
+        assign media_ink = '#FFF8E7'
+      when 'butter-scotch'
+        assign media_background = '#E8B563'
+        assign media_ink = '#321064'
+      when 'caramel-peanut'
+        assign media_background = '#BD9464'
+        assign media_ink = '#321064'
+      when 'plain'
+        assign media_background = '#1767A3'
+        assign media_ink = '#FFF8E7'
+      when 'toffee'
+        assign media_background = '#F7913D'
+        assign media_ink = '#321064'
+      when 'bbq'
+        assign media_background = '#292333'
+        assign media_ink = '#FFF8E7'
+    endcase
+  endif
+%}
+<section class="pc-page pc-product" data-pc-product data-purchasable="{{ product_purchasable }}" data-add-label="{{ 'papacorn.commerce.add_to_cart' | t | escape_once }}" data-sold-out-label="{{ 'papacorn.commerce.sold_out' | t | escape_once }}" data-coming-soon-label="{{ 'papacorn.commerce.coming_soon' | t | escape_once }}" data-purchase-options-label="{{ 'papacorn.commerce.purchase_options' | t | escape_once }}" data-max-reached-label="{{ 'papacorn.commerce.max_reached' | t | escape_once }}" aria-labelledby="pc-product-title-{{ section.id }}">
+  <div class="pc-container">
+    {% if product == blank %}
+      <div class="pc-product-missing">
+        <p class="pc-kicker">{{ 'papacorn.commerce.flavour' | t }}</p>
+        <h1 class="pc-heading" id="pc-product-title-{{ section.id }}">{{ 'papacorn.commerce.product_missing' | t }}</h1>
+        <p>{{ 'papacorn.commerce.product_missing_text' | t }}</p>
+        <a class="pc-button" href="{{ bundle_url }}">{{ 'papacorn.commerce.bundle' | t }} <span aria-hidden="true">↗</span></a>
+      </div>
+    {% else %}
+      <a class="pc-product-back" href="{{ routes.all_products_collection_url }}"><span aria-hidden="true">←</span> {{ 'papacorn.commerce.back_to_flavours' | t }}</a>
+      <div class="pc-product-layout">
+        <div class="pc-product-gallery">
+          <div class="pc-product-stage" style="--pc-product-flavour: {{ media_background }}; --pc-product-ink: {{ media_ink }};">
+            {% if section.settings.pack_size != blank %}<span class="pc-product-pack-size">{{ section.settings.pack_size | escape }}</span>{% endif %}
+            {% if current_image != blank %}
+              {{ current_image | image_url: width: 1400 | image_tag: class: 'pc-product-packet', widths: '360, 540, 720, 960, 1200, 1400', sizes: '(min-width: 990px) 48vw, 90vw', loading: 'eager', fetchpriority: 'high', alt: current_image.alt, data-pc-product-image: '' }}
+            {% endif %}
+          </div>
+          {% if product.images.size > 1 %}
+            <div class="pc-product-thumbnails" aria-label="{{ 'papacorn.commerce.product_gallery' | t | escape_once }}">
+              {% for image in product.images %}
+                <a href="{{ image | image_url: width: 1800 | escape }}" target="_blank" rel="noopener" data-pc-product-thumbnail data-image="{{ image | image_url: width: 1400 | escape }}" data-image-alt="{{ image.alt | escape }}" data-image-srcset="{{ image | image_url: width: 360 | escape }} 360w, {{ image | image_url: width: 540 | escape }} 540w, {{ image | image_url: width: 720 | escape }} 720w, {{ image | image_url: width: 960 | escape }} 960w, {{ image | image_url: width: 1200 | escape }} 1200w, {{ image | image_url: width: 1400 | escape }} 1400w" aria-label="{{ 'papacorn.commerce.product_image' | t: number: forloop.index, product: product.title | escape_once }}">
+                  {{ image | image_url: width: 240 | image_tag: widths: '120, 240', sizes: '80px', loading: 'lazy', alt: image.alt }}
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+        <div class="pc-product-copy">
+          <p class="pc-kicker">{{ 'papacorn.commerce.flavour' | t }}</p>
+          <h1 class="pc-heading" id="pc-product-title-{{ section.id }}">{{ product.title | escape }}</h1>
+          {% if product.description != blank %}
+            <div class="pc-product-description">{{ product.description }}</div>
+          {% elsif flavour_description_key != blank %}
+            <div class="pc-product-description"><p>{{ flavour_description_key | t }}</p></div>
+          {% endif %}
+          <section class="pc-product-details" aria-labelledby="pc-product-details-title-{{ section.id }}">
+            <h2 id="pc-product-details-title-{{ section.id }}">{{ 'papacorn.commerce.product_details' | t }}</h2>
+            <dl>
+              {% if flavour_profile_key != blank %}
+                <div class="pc-product-profile"><dt>{{ 'papacorn.commerce.flavour_profile' | t }}</dt><dd>{{ flavour_profile_key | t }}</dd></div>
+              {% endif %}
+              {% if section.settings.pack_size != blank %}
+                <div><dt>{{ 'papacorn.commerce.pack_size' | t }}</dt><dd>{{ section.settings.pack_size | escape }}</dd></div>
+              {% endif %}
+              <div><dt>{{ 'papacorn.commerce.price' | t }}</dt><dd class="pc-product-price" data-pc-product-price>{{ current_variant.price | default: product.price | money }}</dd></div>
+            </dl>
+          </section>
+          {% if product.variants.size > 1 and product.published_at != blank %}
+            <form class="pc-product-chooser" action="{{ product.url }}" method="get" data-pc-product-chooser>
+              <label for="{{ variant_id }}">{{ 'papacorn.commerce.variant' | t }}</label>
+              <div class="pc-product-option-row">
+                <select id="{{ variant_id }}" name="variant" data-pc-product-variant aria-describedby="pc-product-options-note-{{ section.id }}">
+                  {% for variant in product.variants %}
+                    {% liquid
+                      assign option_min = variant.quantity_rule.min | default: 1
+                      assign option_step = variant.quantity_rule.increment | default: 1
+                      assign option_cart_quantity = cart | item_count_for_variant: variant.id
+                      if option_cart_quantity > 0
+                        assign option_min = option_step
+                      endif
+                      assign option_max = variant.quantity_rule.max
+                      if option_max != blank
+                        assign option_max = option_max | minus: option_cart_quantity | at_least: 0
+                      endif
+                      assign option_image = variant.featured_image | default: fallback_image
+                    %}
+                    <option value="{{ variant.id }}"{% if variant.id == current_variant.id %} selected{% endif %}{% if variant.available == false %} disabled{% endif %} data-price="{{ variant.price | money | escape }}" data-available="{{ variant.available }}" data-requires-plan="{{ variant.requires_selling_plan }}" data-min="{{ option_min }}" data-max="{{ option_max }}" data-step="{{ option_step }}" data-image="{% if option_image != blank %}{{ option_image | image_url: width: 1400 }}{% endif %}" data-image-alt="{{ option_image.alt | default: product.title | escape }}" data-min-label="{{ 'papacorn.commerce.quantity_min' | t: quantity: option_min | escape_once }}" data-max-label="{% if option_max != blank %}{{ 'papacorn.commerce.quantity_max' | t: quantity: option_max | escape_once }}{% endif %}" data-step-label="{{ 'papacorn.commerce.quantity_step' | t: quantity: option_step | escape_once }}">{{ variant.title | escape }} — {{ variant.price | money }}{% unless variant.available %} — {{ 'papacorn.commerce.sold_out' | t }}{% endunless %}</option>
+                  {% endfor %}
+                </select>
+                <button class="pc-product-refresh" type="submit" data-pc-product-refresh>{{ 'papacorn.commerce.update_option' | t }}</button>
+              </div>
+              <p class="pc-product-option-note" id="pc-product-options-note-{{ section.id }}" data-pc-product-option-note>{{ 'papacorn.commerce.options_note' | t }}</p>
+            </form>
+          {% endif %}
+          {% if product.published_at == blank %}
+            <button class="pc-button pc-product-unavailable" type="button" disabled>{{ 'papacorn.commerce.coming_soon' | t }}</button>
+          {% elsif product.requires_selling_plan or current_variant.requires_selling_plan %}
+            <p class="pc-product-availability">{{ 'papacorn.commerce.purchase_options' | t }}</p>
+            <button class="pc-button pc-product-unavailable" type="button" disabled>{{ 'papacorn.commerce.coming_soon' | t }}</button>
+          {% elsif current_variant.available == false or current_variant == blank %}
+            <button class="pc-button pc-product-unavailable" type="button" disabled>{{ 'papacorn.commerce.sold_out' | t }}</button>
+          {% elsif maximum_reached %}
+            <p class="pc-product-availability">{{ 'papacorn.commerce.max_reached' | t }}</p>
+            <button class="pc-button pc-product-unavailable" type="button" disabled>{{ 'papacorn.commerce.add_to_cart' | t }}</button>
+          {% else %}
+            {% form 'product', product, id: product_form_id, data-pc-product-form: '' %}
+              {{ form.errors | default_errors }}
+              <input type="hidden" name="id" value="{{ current_variant.id }}" data-pc-product-id>
+              <input type="hidden" name="return_to" value="{{ routes.cart_url }}">
+              <label class="pc-product-quantity-label" for="{{ quantity_id }}">{{ 'papacorn.commerce.quantity' | t }}</label>
+              <div class="pc-product-purchase-row">
+                <input class="pc-product-quantity" id="{{ quantity_id }}" type="number" name="quantity" min="{{ add_min }}"{% if add_max != blank %} max="{{ add_max }}"{% endif %} step="{{ rule_step }}" value="{{ add_min }}" inputmode="numeric" required data-pc-product-quantity aria-describedby="pc-product-rules-{{ section.id }}">
+                <button class="pc-button pc-product-add" type="submit" data-pc-product-add>{{ 'papacorn.commerce.add_to_cart' | t }} <span aria-hidden="true">+</span></button>
+              </div>
+              <p class="pc-product-rules" id="pc-product-rules-{{ section.id }}">
+                <span data-pc-product-rule-min{% if add_min <= 1 %} hidden{% endif %}>{{ 'papacorn.commerce.quantity_min' | t: quantity: add_min }}</span>
+                <span data-pc-product-rule-step{% if rule_step <= 1 %} hidden{% endif %}>{{ 'papacorn.commerce.quantity_step' | t: quantity: rule_step }}</span>
+                <span data-pc-product-rule-max{% if add_max == blank %} hidden{% endif %}>{% if add_max != blank %}{{ 'papacorn.commerce.quantity_max' | t: quantity: add_max }}{% endif %}</span>
+              </p>
+              <p class="pc-product-availability" role="status" aria-live="polite" data-pc-product-status></p>
+            {% endform %}
+          {% endif %}
+          <div class="pc-product-bundle">
+            <p>{{ 'papacorn.commerce.bundle_text' | t }}</p>
+            <a href="{{ bundle_url }}">{{ 'papacorn.commerce.bundle' | t }} <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "PapaCorn product",
+  "tag": "div",
+  "class": "pc-product-section",
+  "settings": [
+    { "type": "text", "id": "pack_size", "label": "Pack size", "default": "50g" },
+    { "type": "checkbox", "id": "use_flavour_color", "label": "Use approved flavour colours", "default": true },
+    { "type": "color", "id": "media_background", "label": "Packet background", "default": "#FFD229" },
+    { "type": "color", "id": "media_ink", "label": "Packet badge colour", "default": "#321064" },
+    { "type": "url", "id": "bundle_url", "label": "Bundle page" }
+  ],
+  "presets": [{ "name": "PapaCorn product" }],
+  "enabled_on": { "templates": ["product"] }
+}
+{% endschema %}

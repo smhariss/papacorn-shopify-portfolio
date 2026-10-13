@@ -1,0 +1,92 @@
+{{ 'papacorn-information.css' | asset_url | stylesheet_tag }}
+{% liquid
+  assign shop_url = section.settings.shop_link | default: routes.all_products_collection_url
+%}
+<div class="pc-page pc-info">
+  <section class="pc-container pc-info__hero" aria-labelledby="pc-about-heading-{{ section.id }}">
+    <div class="pc-info__hero-copy">
+      <p class="pc-kicker">{{ section.settings.kicker | escape }}</p>
+      <h1 class="pc-heading pc-info__heading" id="pc-about-heading-{{ section.id }}">{{ section.settings.heading | escape | newline_to_br }}</h1>
+      <p class="pc-info__lead">{{ section.settings.intro | escape | newline_to_br }}</p>
+      <a class="pc-button pc-info__shop" href="{{ shop_url }}">{{ section.settings.shop_label | escape }} <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="pc-info__hero-art">
+      <div class="pc-info__hero-photo">
+        {% if section.settings.hero_image != blank %}
+          {{ section.settings.hero_image | image_url: width: 1600 | image_tag: widths: '400, 700, 1000, 1300, 1600', sizes: '(min-width: 990px) 48vw, 94vw', loading: 'eager', fetchpriority: 'high' }}
+        {% else %}
+          <span class="pc-info__photo-mark" aria-hidden="true">✳</span>
+        {% endif %}
+      </div>
+      <div class="pc-info__stamp" aria-hidden="true"><span>{{ section.settings.stamp | escape | newline_to_br }}</span></div>
+    </div>
+  </section>
+  <div class="pc-container pc-info__facts">
+    <dl class="pc-info__fact-grid">
+      <div><dt>{{ section.settings.fact_1_label | escape }}</dt><dd>{{ section.settings.fact_1_value | escape }}</dd></div>
+      <div><dt>{{ section.settings.fact_2_label | escape }}</dt><dd>{{ section.settings.fact_2_value | escape }}</dd></div>
+      <div><dt>{{ section.settings.fact_3_label | escape }}</dt><dd>{{ section.settings.fact_3_value | escape }}</dd></div>
+    </dl>
+  </div>
+  <section class="pc-info__story" aria-labelledby="pc-about-story-{{ section.id }}">
+    <div class="pc-container pc-info__story-grid">
+      <div class="pc-info__story-art">
+        <div class="pc-info__story-photo">
+          {% if section.settings.story_image != blank %}
+            {{ section.settings.story_image | image_url: width: 1600 | image_tag: widths: '400, 700, 1000, 1300, 1600', sizes: '(min-width: 990px) 46vw, 92vw', loading: 'lazy' }}
+          {% else %}
+            <span class="pc-info__photo-mark" aria-hidden="true">✳</span>
+          {% endif %}
+        </div>
+        <p class="pc-info__photo-note">{{ section.settings.photo_note | escape }}</p>
+      </div>
+      <div class="pc-info__story-copy">
+        <p class="pc-kicker">{{ section.settings.story_kicker | escape }}</p>
+        <h2 class="pc-heading pc-info__story-heading" id="pc-about-story-{{ section.id }}">{{ section.settings.story_heading | escape | newline_to_br }}</h2>
+        <p>{{ section.settings.story_copy | escape | newline_to_br }}</p>
+        <p>{{ section.settings.story_copy_2 | escape | newline_to_br }}</p>
+        <span class="pc-info__story-star" aria-hidden="true">✳</span>
+      </div>
+    </div>
+  </section>
+  <section class="pc-container pc-info__closing" aria-labelledby="pc-about-closing-{{ section.id }}">
+    <p class="pc-kicker">{{ section.settings.closing_kicker | escape }}</p>
+    <h2 class="pc-heading pc-info__closing-heading" id="pc-about-closing-{{ section.id }}">{{ section.settings.closing_heading | escape | newline_to_br }}</h2>
+    <p>{{ section.settings.closing_copy | escape | newline_to_br }}</p>
+    <a class="pc-button pc-info__shop" href="{{ shop_url }}">{{ section.settings.shop_label | escape }} <span aria-hidden="true">↗</span></a>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "PapaCorn About",
+  "settings": [
+    { "type": "header", "content": "Introduction" },
+    { "type": "text", "id": "kicker", "label": "Eyebrow", "default": "This is PapaCorn." },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "A little crunch.\nA lot of character." },
+    { "type": "textarea", "id": "intro", "label": "Introduction", "default": "Sweet, savoury, and full of personality. PapaCorn brings nine flavours to the snack moments you make your own." },
+    { "type": "image_picker", "id": "hero_image", "label": "Main campaign photograph" },
+    { "type": "textarea", "id": "stamp", "label": "Decorative stamp", "default": "Made for\nyour mood." },
+    { "type": "header", "content": "The range" },
+    { "type": "text", "id": "fact_1_value", "label": "First fact value", "default": "9" },
+    { "type": "text", "id": "fact_1_label", "label": "First fact label", "default": "Flavours to explore" },
+    { "type": "text", "id": "fact_2_value", "label": "Second fact value", "default": "50g" },
+    { "type": "text", "id": "fact_2_label", "label": "Second fact label", "default": "In every bag" },
+    { "type": "text", "id": "fact_3_value", "label": "Third fact value", "default": "PKR 150" },
+    { "type": "text", "id": "fact_3_label", "label": "Third fact label", "default": "For each flavour" },
+    { "type": "header", "content": "The snack moments" },
+    { "type": "image_picker", "id": "story_image", "label": "Second campaign photograph" },
+    { "type": "text", "id": "photo_note", "label": "Photograph caption", "default": "Good company. Great snack energy." },
+    { "type": "text", "id": "story_kicker", "label": "Story eyebrow", "default": "For the moments in between." },
+    { "type": "textarea", "id": "story_heading", "label": "Story heading", "default": "Press play.\nPass the popcorn." },
+    { "type": "textarea", "id": "story_copy", "label": "Story paragraph", "default": "A movie on the sofa. A pause at your desk. A weekend with your favourite people. There is a PapaCorn flavour for whatever the moment feels like." },
+    { "type": "textarea", "id": "story_copy_2", "label": "Second story paragraph", "default": "From Choc Corn and Butter Scotch to Cheese, BBQ, and Hot & Spicy, our range makes room for sweet cravings and savoury moods. Pick your favourite, or mix a few and find a new one." },
+    { "type": "header", "content": "Closing invitation" },
+    { "type": "text", "id": "closing_kicker", "label": "Closing eyebrow", "default": "Your flavours. Your way." },
+    { "type": "textarea", "id": "closing_heading", "label": "Closing heading", "default": "Meet your\nnext snack mood." },
+    { "type": "textarea", "id": "closing_copy", "label": "Closing description", "default": "Choose the flavours and quantities you like. Every PapaCorn bag is 50g, at PKR 150 each." },
+    { "type": "text", "id": "shop_label", "label": "Shop button label", "default": "Explore the flavours" },
+    { "type": "url", "id": "shop_link", "label": "Shop button link" }
+  ],
+  "presets": [{ "name": "PapaCorn About" }]
+}
+{% endschema %}

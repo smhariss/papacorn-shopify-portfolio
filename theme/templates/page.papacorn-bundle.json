@@ -1,0 +1,126 @@
+{
+  "sections": {
+    "main": {
+      "type": "papacorn-bundle",
+      "settings": {
+        "heading": "Make your bundle",
+        "subheading": "Pick your flavours. Set your quantities. Make it yours."
+      },
+      "blocks": {
+        "flavour_sweet_salted": {
+          "type": "flavour",
+          "settings": {
+            "product": "sweet-salted",
+            "cutout": "shopify://shop_images/papacorn-sweet-salted-cutout.webp",
+            "fallback_title": "Sweet & Salted",
+            "fallback_price": 150,
+            "background": "#27c7c2",
+            "ink": "#321064"
+          }
+        },
+        "flavour_cheese": {
+          "type": "flavour",
+          "settings": {
+            "product": "cheese",
+            "cutout": "shopify://shop_images/papacorn-cheese-cutout.webp",
+            "fallback_title": "Cheese",
+            "fallback_price": 150,
+            "background": "#ffd229",
+            "ink": "#321064"
+          }
+        },
+        "flavour_hot_spicy": {
+          "type": "flavour",
+          "settings": {
+            "product": "hot-spicy",
+            "cutout": "shopify://shop_images/papacorn-hot-spicy-cutout.webp",
+            "fallback_title": "Hot & Spicy",
+            "fallback_price": 150,
+            "background": "#be1b38",
+            "ink": "#fff8e7"
+          }
+        },
+        "flavour_choc_corn": {
+          "type": "flavour",
+          "settings": {
+            "product": "choc-corn",
+            "cutout": "shopify://shop_images/papacorn-choc-corn-cutout.webp",
+            "fallback_title": "Choc Corn",
+            "fallback_price": 150,
+            "background": "#513125",
+            "ink": "#fff8e7"
+          }
+        },
+        "flavour_butter_scotch": {
+          "type": "flavour",
+          "settings": {
+            "product": "butter-scotch",
+            "cutout": "shopify://shop_images/papacorn-butter-scotch-cutout.webp",
+            "fallback_title": "Butter Scotch",
+            "fallback_price": 150,
+            "background": "#e8b563",
+            "ink": "#321064"
+          }
+        },
+        "flavour_caramel_peanut": {
+          "type": "flavour",
+          "settings": {
+            "product": "caramel-peanut",
+            "cutout": "shopify://shop_images/papacorn-caramel-peanut-cutout.webp",
+            "fallback_title": "Caramel Peanut",
+            "fallback_price": 150,
+            "background": "#bd9464",
+            "ink": "#321064"
+          }
+        },
+        "flavour_plain": {
+          "type": "flavour",
+          "settings": {
+            "product": "plain",
+            "cutout": "shopify://shop_images/papacorn-plain-cutout.webp",
+            "fallback_title": "Plain",
+            "fallback_price": 150,
+            "background": "#1767a3",
+            "ink": "#fff8e7"
+          }
+        },
+        "flavour_toffee": {
+          "type": "flavour",
+          "settings": {
+            "product": "toffee",
+            "cutout": "shopify://shop_images/papacorn-toffee-cutout.webp",
+            "fallback_title": "Toffee",
+            "fallback_price": 150,
+            "background": "#f7913d",
+            "ink": "#321064"
+          }
+        },
+        "flavour_bbq": {
+          "type": "flavour",
+          "settings": {
+            "product": "bbq",
+            "cutout": "shopify://shop_images/papacorn-bbq-cutout.webp",
+            "fallback_title": "BBQ",
+            "fallback_price": 150,
+            "background": "#292333",
+            "ink": "#fff8e7"
+          }
+        }
+      },
+      "block_order": [
+        "flavour_sweet_salted",
+        "flavour_cheese",
+        "flavour_hot_spicy",
+        "flavour_choc_corn",
+        "flavour_butter_scotch",
+        "flavour_caramel_peanut",
+        "flavour_plain",
+        "flavour_toffee",
+        "flavour_bbq"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

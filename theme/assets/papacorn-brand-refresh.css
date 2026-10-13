@@ -1,0 +1,120 @@
+/* PapaCorn color and large-kernel pattern refresh. Load last.
+   Decoration stays on existing scene layers; layout and motion are unchanged. */
+.pc-motion {
+  --pc-refresh-purple: var(--pc-purple, #321064);
+  --pc-refresh-yellow: var(--pc-yellow, #ffd229);
+  --pc-refresh-cream: var(--pc-cream, #fff8e7);
+  --pc-popcorn-tile: 1200px 1000px;
+  --pc-brand-deep-gradient:
+    radial-gradient(ellipse 46% 78% at 105% 42%, color-mix(in srgb, var(--pc-refresh-yellow) 82%, transparent) 0%, color-mix(in srgb, var(--pc-refresh-yellow) 24%, transparent) 30%, transparent 66%),
+    radial-gradient(ellipse 80% 110% at 5% 10%, color-mix(in srgb, var(--pc-refresh-purple) 65%, #b39aff) 0%, transparent 68%),
+    linear-gradient(130deg, color-mix(in srgb, var(--pc-refresh-purple) 82%, #13052c) 4%, var(--pc-refresh-purple) 50%, color-mix(in srgb, var(--pc-refresh-purple) 67%, #8d62bc) 100%);
+  --pc-brand-light-gradient:
+    radial-gradient(ellipse 78% 70% at 100% 0%, color-mix(in srgb, var(--pc-refresh-purple) 20%, transparent) 0%, transparent 72%),
+    radial-gradient(ellipse 85% 115% at 0% 85%, var(--pc-refresh-yellow) 0%, transparent 74%),
+    linear-gradient(125deg, var(--pc-refresh-cream) 4%, color-mix(in srgb, var(--pc-refresh-yellow) 28%, var(--pc-refresh-cream)) 100%);
+}
+
+/* Broadly spaced, 280–350px kernels on desktop and 180–220px on mobile.
+   A mask lets the outline color follow each editable Shopify scene color. */
+.pc-motion .pc-m-opening .pc-m-hero::before,
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening-sticky::before,
+.pc-motion .pc-m-story-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: none;
+  background-color: var(--pc-ink, var(--pc-refresh-purple));
+  -webkit-mask-image: url('popcorn-pattern.svg');
+  mask-image: url('popcorn-pattern.svg');
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
+  -webkit-mask-size: var(--pc-popcorn-tile);
+  mask-size: var(--pc-popcorn-tile);
+  -webkit-mask-position: center top;
+  mask-position: center top;
+  animation: none;
+}
+.pc-motion .pc-m-opening .pc-m-hero {
+  background-color: var(--pc-refresh-purple);
+  background-image: var(--pc-brand-deep-gradient);
+  color: #fff;
+}
+.pc-motion .pc-m-opening .pc-m-hero::before {
+  z-index: -1;
+  background-color: var(--pc-refresh-cream);
+  opacity: .1;
+}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening-sticky::before {
+  z-index: 0;
+  opacity: calc((1 - var(--pc-opening-background, 1)) * .095);
+}
+.pc-motion .pc-m-arc-sticky { isolation: isolate; }
+
+.pc-motion .pc-m-story-card { position: relative; isolation: isolate; }
+.pc-motion .pc-m-story-card::before {
+  z-index: -1;
+  background-color: var(--pc-refresh-purple);
+  opacity: .07;
+}
+.pc-motion .pc-m-story-card:nth-child(2)::before {
+  -webkit-mask-position: left -250px top -75px;
+  mask-position: left -250px top -75px;
+}
+.pc-motion .pc-m-story-card:nth-child(3)::before {
+  -webkit-mask-position: right -140px bottom -100px;
+  mask-position: right -140px bottom -100px;
+}
+.pc-motion .pc-m-hero .motion-nav .desktop-nav a,
+.pc-motion .pc-m-hero .motion-nav .cart-button {
+  background: color-mix(in srgb, var(--pc-refresh-purple) 18%, transparent);
+  color: #fff;
+  border-color: #fff;
+}
+.pc-motion .pc-m-hero .motion-nav .desktop-nav a:hover,
+.pc-motion .pc-m-hero .motion-nav .cart-button:hover {
+  background: #fff;
+  color: var(--pc-refresh-purple);
+}
+.pc-motion .pc-m-opening .pc-m-hero__bottom > p { color: #fff; }
+
+/* The questions panel uses the same PapaCorn night palette. */
+.pc-motion .pc-m-faq {
+  background-color: var(--pc-refresh-purple);
+  background-image: var(--pc-brand-deep-gradient);
+}
+.pc-motion .pc-m-faq > h2 { color: #fff; }
+.pc-motion .pc-m-faq-list details,
+.pc-motion .pc-m-faq-list details:first-child { background: #fff; }
+
+/* A warm, lighter closing palette joins the final invitation and footer. */
+.pc-motion .pc-m-final {
+  background-color: var(--pc-refresh-cream);
+  background-image: var(--pc-brand-light-gradient);
+  color: var(--pc-refresh-purple);
+}
+.motion-footer {
+  --pc-refresh-purple: var(--pc-purple, var(--purple, #321064));
+  --pc-refresh-yellow: var(--pc-yellow, var(--yellow, #ffd229));
+  --pc-refresh-cream: var(--pc-cream, var(--cream, #fff8e7));
+  background-color: var(--pc-refresh-cream);
+  background-image:
+    radial-gradient(ellipse 80% 350% at 100% 0%, color-mix(in srgb, var(--pc-refresh-purple) 13%, transparent), transparent 72%),
+    linear-gradient(125deg, color-mix(in srgb, var(--pc-refresh-yellow) 55%, var(--pc-refresh-cream)), var(--pc-refresh-cream));
+  color: var(--pc-refresh-purple);
+  border-color: color-mix(in srgb, var(--pc-refresh-purple) 16%, transparent);
+}
+@media (max-width: 749px) {
+  .pc-motion { --pc-popcorn-tile: 740px 620px; }
+  .pc-motion.is-enhanced.has-motion .pc-m-story-card { padding-top: 76px; }
+
+  .pc-motion .pc-m-story-card:nth-child(2)::before {
+    -webkit-mask-position: left -110px top -45px;
+    mask-position: left -110px top -45px;
+  }
+  .pc-motion .pc-m-story-card:nth-child(3)::before {
+    -webkit-mask-position: right -70px bottom -35px;
+    mask-position: right -70px bottom -35px;
+  }
+}

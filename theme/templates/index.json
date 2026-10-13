@@ -1,0 +1,191 @@
+{
+  "sections": {
+    "papacorn_homepage": {
+      "type": "papacorn-homepage",
+      "settings": {
+        "show_reference_menu": true,
+        "use_brand_fonts": true,
+        "enable_motion": true,
+        "brand_name": "PapaCorn",
+        "purple": "#321064",
+        "yellow": "#FFD229",
+        "cream": "#FFF8E7",
+        "hero_eyebrow": "SMALL BAG. BIG PERSONALITY.",
+        "hero_tagline": "Nine flavours. A whole lot of personality. Find the bag that’s your kind of mood.",
+        "hero_cta": "Explore the flavours",
+        "intro_heading": "9 Flavours. 1 Obsession.",
+        "selector_heading": "Choose your PapaCorn flavour",
+        "arc_heading": "A LITTLE SWEET. A LITTLE SALTY. A WHOLE LOT OF PERSONALITY.",
+        "arc_eyebrow": "POPCORN FOR YOUR KIND OF PEOPLE.",
+        "arc_caption": "For the big nights. The little breaks. And everything in between.",
+        "story_title_1": "THE PLOT TWIST? THE SNACK.",
+        "story_copy_1": "Movie chosen. Friends gathered. Your favourite popcorn flavour within reach. That’s a good night.",
+        "story_title_2": "OUT OF OFFICE. INTO POPCORN.",
+        "story_copy_2": "Your next idea can wait a minute. Bring some Cheese energy to your afternoon snack break.",
+        "story_title_3": "GOOD COMPANY. GREAT CRUNCH.",
+        "story_copy_3": "Make room for one more at the hangout. Sweet, savoury, or spicy—bring a bag for every mood.",
+        "benefits_eyebrow": "GOOD THINGS COME IN POPCORN BAGS.",
+        "benefits_heading_1": "SMALL BAG.",
+        "benefits_heading_2": "BIG POSSIBILITIES.",
+        "benefit_title_1": "Flavours to explore",
+        "benefit_copy_1": "From Choc Corn to Hot & Spicy. A flavour for whatever mood you’re in.",
+        "benefit_title_2": "Your snack break",
+        "benefit_copy_2": "A compact packet for your desk, your movie night, or your next hangout.",
+        "benefit_title_3": "Every single flavour",
+        "benefit_copy_3": "Mix your favourites, try a new one, or keep a bag all to yourself.",
+        "faq_heading": "Questions? We’ve got answers.",
+        "faq_question_1": "How much is a bag?",
+        "faq_answer_1": "<p>Every PapaCorn flavour is Rs. 150 for a 50g bag.</p>",
+        "faq_question_2": "What flavours can I choose from?",
+        "faq_answer_2": "<p>Choc Corn, Butter Scotch, Caramel Peanut, Sweet & Salted, Plain, Toffee, Cheese, BBQ, and Hot & Spicy.</p>",
+        "final_heading": "READY TO GET POPPING?",
+        "final_cta": "Shop all flavours",
+        "wordmark": "shopify://shop_images/papacorn-transparent-logo.png",
+        "shop_link": "/collections/all",
+        "hero_packet_1": "shopify://shop_images/papacorn-cheese-cutout.webp",
+        "hero_packet_2": "shopify://shop_images/papacorn-sweet-salted-cutout.webp",
+        "hero_packet_3": "shopify://shop_images/papacorn-hot-spicy-cutout.webp",
+        "arc_image_1": "shopify://shop_images/papacorn-weekend-hangs.webp",
+        "arc_image_2": "shopify://shop_images/papacorn-movie-night.webp",
+        "arc_image_3": "shopify://shop_images/papacorn-desk-break.webp",
+        "arc_image_4": "shopify://shop_images/papacorn-weekend-hangs.webp",
+        "arc_image_5": "shopify://shop_images/papacorn-movie-night.webp",
+        "story_image_1": "shopify://shop_images/papacorn-movie-night.webp",
+        "story_image_2": "shopify://shop_images/papacorn-desk-break.webp",
+        "story_image_3": "shopify://shop_images/papacorn-weekend-hangs.webp",
+        "faq_question_3": "Can I build my own bundle?",
+        "faq_answer_3": "<p>Yes. Choose any PapaCorn flavours and set the number of bags you want on the Make Your Bundle page.</p>",
+        "faq_question_4": "How does the 20% bundle offer work?",
+        "faq_answer_4": "<p>Buy 5 or more PapaCorn bags in any flavour mix to get 20% off automatically. Five Rs. 150 bags cost Rs. 600 after the discount. Shipping is separate.</p>",
+        "faq_question_5": "Can I choose several bags of one flavour?",
+        "faq_answer_5": "<p>Yes. You can repeat your favourite flavour or mix different ones. The 20% offer counts bags, so any combination of 5 or more qualifies.</p>",
+        "faq_question_6": "How can I contact PapaCorn?",
+        "faq_answer_6": "<p>Email <a href=\"mailto:contact@papacorn.pk\">contact@papacorn.pk</a>, or use the form on our Contact page.</p>"
+      },
+      "blocks": {
+        "flavour_sweet_salted": {
+          "type": "product",
+          "settings": {
+            "fallback_price": 150,
+            "background": "#27c7c2",
+            "ink": "#321064",
+            "description": "Sweet tooth. Salty mood. A little of both in one very good bag.",
+            "product": "sweet-salted",
+            "fallback_title": "Sweet & Salted",
+            "cutout": "shopify://shop_images/papacorn-sweet-salted-cutout.webp"
+          }
+        },
+        "flavour_cheese": {
+          "type": "product",
+          "settings": {
+            "fallback_price": 150,
+            "background": "#ffd229",
+            "ink": "#321064",
+            "description": "Big cheese energy. Golden popcorn for your savoury side.",
+            "product": "cheese",
+            "fallback_title": "Cheese",
+            "cutout": "shopify://shop_images/papacorn-cheese-cutout.webp"
+          }
+        },
+        "flavour_hot_spicy": {
+          "type": "product",
+          "settings": {
+            "fallback_price": 150,
+            "background": "#be1b38",
+            "ink": "#fff8e7",
+            "description": "Turn up the snack break. This is the bag for your spicy mood.",
+            "product": "hot-spicy",
+            "fallback_title": "Hot & Spicy",
+            "cutout": "shopify://shop_images/papacorn-hot-spicy-cutout.webp"
+          }
+        },
+        "flavour_choc_corn": {
+          "type": "product",
+          "settings": {
+            "fallback_price": 150,
+            "background": "#513125",
+            "ink": "#fff8e7",
+            "description": "Popcorn, meet chocolate. Your next sweet little obsession.",
+            "product": "choc-corn",
+            "fallback_title": "Choc Corn",
+            "cutout": "shopify://shop_images/papacorn-choc-corn-cutout.webp"
+          }
+        },
+        "flavour_butter_scotch": {
+          "type": "product",
+          "settings": {
+            "fallback_price": 150,
+            "background": "#e8b563",
+            "ink": "#321064",
+            "description": "A golden, buttery sweet escape. Save a bag for your next movie.",
+            "product": "butter-scotch",
+            "fallback_title": "Butter Scotch",
+            "cutout": "shopify://shop_images/papacorn-butter-scotch-cutout.webp"
+          }
+        },
+        "flavour_caramel_peanut": {
+          "type": "product",
+          "settings": {
+            "fallback_price": 150,
+            "background": "#bd9464",
+            "ink": "#321064",
+            "description": "Caramel sweetness with a peanut twist. A whole new snack mood.",
+            "product": "caramel-peanut",
+            "fallback_title": "Caramel Peanut",
+            "cutout": "shopify://shop_images/papacorn-caramel-peanut-cutout.webp"
+          }
+        },
+        "flavour_plain": {
+          "type": "product",
+          "settings": {
+            "fallback_price": 150,
+            "background": "#1767a3",
+            "ink": "#fff8e7",
+            "description": "Keep it classic. The simple pleasure of a popcorn break.",
+            "product": "plain",
+            "fallback_title": "Plain",
+            "cutout": "shopify://shop_images/papacorn-plain-cutout.webp"
+          }
+        },
+        "flavour_toffee": {
+          "type": "product",
+          "settings": {
+            "fallback_price": 150,
+            "background": "#f7913d",
+            "ink": "#321064",
+            "description": "Toffee sweetness, popcorn personality. Go on, pick your pop.",
+            "product": "toffee",
+            "fallback_title": "Toffee",
+            "cutout": "shopify://shop_images/papacorn-toffee-cutout.webp"
+          }
+        },
+        "flavour_bbq": {
+          "type": "product",
+          "settings": {
+            "fallback_price": 150,
+            "background": "#292333",
+            "ink": "#fff8e7",
+            "description": "Bring the BBQ mood to your snack break. Bold and savoury.",
+            "product": "bbq",
+            "fallback_title": "BBQ",
+            "cutout": "shopify://shop_images/papacorn-bbq-cutout.webp"
+          }
+        }
+      },
+      "block_order": [
+        "flavour_sweet_salted",
+        "flavour_cheese",
+        "flavour_hot_spicy",
+        "flavour_choc_corn",
+        "flavour_butter_scotch",
+        "flavour_caramel_peanut",
+        "flavour_plain",
+        "flavour_toffee",
+        "flavour_bbq"
+      ]
+    }
+  },
+  "order": [
+    "papacorn_homepage"
+  ]
+}

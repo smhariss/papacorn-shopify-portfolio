@@ -1,0 +1,400 @@
+/* Local, openly licensed typography and reference navigation.
+   Load after the base, motion, preview, and continuity stylesheets. */
+@font-face {
+  font-family: 'PapaCornDisplay';
+  src: url('assets/fonts/SpicyRice-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'PapaCornBody';
+  src: url('assets/fonts/Bounded-Medium.otf') format('opentype');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+:root {
+  --display: 'PapaCornDisplay', Georgia, serif;
+  --body: 'PapaCornBody', Arial, sans-serif;
+}
+.pc-motion,
+.motion-nav,
+.motion-footer,
+.cart-drawer,
+.toast,
+.floating-bag {
+  font-family: var(--body);
+  font-style: normal;
+  font-weight: 500;
+  font-synthesis: none;
+}
+.pc-motion button,
+.pc-motion input,
+.pc-motion summary,
+.pc-motion .pc-m-product-price,
+.pc-motion .product-card p,
+.pc-motion .filter,
+.pc-motion .pc-m-eyebrow,
+.pc-motion .eyebrow,
+.pc-motion .moment-shop,
+.motion-footer,
+.cart-drawer button,
+.cart-drawer h3,
+.cart-drawer p,
+.cart-drawer .cart-total,
+.floating-bag {
+  font-family: var(--body);
+  font-style: normal;
+  font-weight: 500;
+  font-synthesis: none;
+}
+.pc-motion h1,
+.pc-motion h2,
+.pc-motion h3,
+.pc-motion .motion-shop .section-heading h2,
+.pc-motion .serif-accent,
+.cart-drawer .cart-header h2 {
+  font-family: var(--display);
+  font-style: normal;
+  font-weight: 400;
+  font-synthesis: none;
+  letter-spacing: -.015em;
+}
+.pc-motion .motion-shop .product-card h3,
+.pc-motion .pc-m-benefit h3,
+.pc-motion .pc-m-benefit > span,
+.cart-drawer .cart-line h3 {
+  font-family: var(--body);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -.025em;
+}
+.pc-motion .pc-m-intro h2 {
+  font-size: clamp(52px, 5.65vw, 79px);
+  line-height: 1.04;
+}
+.pc-motion .pc-m-product-copy h3,
+.pc-motion.is-enhanced.has-motion .pc-m-product-copy h3 {
+  font-size: 64px;
+  line-height: 1.04;
+  letter-spacing: -.015em;
+}
+.pc-motion .pc-m-product-description,
+.pc-motion .pc-m-product-price,
+.pc-motion .section-intro > p,
+.pc-motion .pc-m-story-copy > p:last-of-type,
+.pc-motion .pc-m-faq-list summary,
+.pc-motion .pc-m-faq-list details > div {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: -.01em;
+}
+.pc-motion .pc-m-product-description { max-width: 350px; }
+.pc-motion .pc-m-product-price { margin: 22px 0 !important; }
+.pc-motion .pc-m-button {
+  font-family: var(--body);
+  font-style: normal;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -.015em;
+  min-height: 44px;
+}
+.pc-motion .motion-shop .product-card h3 {
+  font-size: 20px;
+  line-height: 1.2;
+}
+.pc-motion .motion-shop .product-card p {
+  font-size: 13px;
+  line-height: 1.4;
+}
+.pc-motion .pc-m-faq-list details > div { line-height: 1.6; }
+
+/* The four navigation pills remain in the opening scene on every screen. */
+.motion-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 7.2%;
+  color: #fff;
+  z-index: 10;
+}
+.motion-nav .motion-brand,
+.motion-nav .menu-button,
+.motion-nav #mobile-nav { display: none !important; }
+.motion-nav .desktop-nav {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 14px;
+}
+.motion-nav .header-actions { flex: 0 0 auto; gap: 0; }
+.motion-nav .desktop-nav a,
+.motion-nav .cart-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 34px;
+  border: 1px solid #fff;
+  border-radius: 100px;
+  padding: 8px 20px;
+  background: transparent;
+  color: #fff;
+  font-family: var(--body);
+  font-style: normal;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.02em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .18s, color .18s;
+}
+.motion-nav .desktop-nav a:hover,
+.motion-nav .cart-button:hover {
+  background: #fff;
+  color: var(--purple, #321064);
+  text-decoration: none;
+}
+.motion-nav .desktop-nav a:focus-visible,
+.motion-nav .cart-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 5px;
+}
+.motion-nav .cart-count {
+  width: 18px;
+  height: 18px;
+  border: 1px solid currentColor;
+  color: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* Preserve the approved PapaCorn wordmark; only its surrounding scene changes. */
+.pc-motion .pc-m-hero {
+  background:
+    radial-gradient(ellipse 95% 115% at 0% 0%, #ae83e2 0%, #d09cde 38%, transparent 73%),
+    radial-gradient(ellipse 85% 110% at 100% 0%, #ff5f62 0%, #ff8673 42%, transparent 77%),
+    linear-gradient(180deg, #e29fc8 0%, #ffb982 55%, #ffd229 100%);
+  color: #fff;
+}
+.pc-motion .pc-m-hero::before { background: none; animation: none; }
+.pc-motion .pc-m-hero__eyebrow,
+.pc-motion .hero-price { display: none; }
+.pc-motion .pc-m-hero__bottom {
+  left: 37%;
+  right: 7.2%;
+  bottom: 6%;
+  align-items: flex-end;
+}
+.pc-motion .pc-m-hero__bottom > p {
+  max-width: 320px;
+  color: #fff;
+  font-family: var(--body);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -.015em;
+}
+.pc-motion .pc-m-hero .pc-m-button {
+  background: #fff;
+  border-color: #fff;
+  color: var(--pc-purple, #321064) !important;
+  padding: 10px 22px;
+  min-height: 40px;
+  gap: 24px;
+}
+.pc-motion .pc-m-row-label {
+  font-family: var(--body);
+  font-style: normal;
+  font-weight: 500;
+}
+@media (min-width: 750px) and (max-width: 989px) {
+  .motion-nav { padding: 18px 5%; }
+  .pc-motion .pc-m-product-copy h3,
+  .pc-motion.is-enhanced.has-motion .pc-m-product-copy h3 { font-size: 52px; }
+  .pc-motion .pc-m-hero__bottom { left: 32%; right: 5%; }
+  .pc-motion .pc-m-hero__bottom > p { max-width: 245px; font-size: 14px; }
+  .pc-motion .pc-m-hero .pc-m-button { font-size: 14px; padding: 10px 18px; }
+}
+@media (max-width: 749px) {
+  .motion-nav {
+    top: 22px;
+    padding: 0 10px;
+    gap: 6px;
+  }
+  .motion-nav .desktop-nav { display: flex; gap: 6px; }
+  .motion-nav .desktop-nav a,
+  .motion-nav .cart-button {
+    min-height: 44px;
+    padding: 10px;
+    font-size: 13px;
+    gap: 6px;
+    letter-spacing: -.03em;
+  }
+  .pc-motion .pc-m-intro h2 { font-size: clamp(40px, 10.5vw, 52px); }
+  .pc-motion .pc-m-product-copy h3,
+  .pc-motion.is-enhanced.has-motion .pc-m-product-copy h3 {
+    font-size: 42px;
+    line-height: 1.02;
+  }
+  .pc-motion .pc-m-product-description,
+  .pc-motion .pc-m-product-price,
+  .pc-motion .pc-m-story-copy > p:last-of-type,
+  .pc-motion .pc-m-faq-list summary,
+  .pc-motion .pc-m-faq-list details > div { font-size: 14px; }
+  .pc-motion .pc-m-product-price { margin: 12px 0 !important; }
+  .pc-motion .pc-m-product-copy .pc-m-button { font-size: 13px; }
+  .pc-motion .motion-shop .product-card h3 { font-size: 15px; }
+  .pc-motion .motion-shop .product-card p { font-size: 11px; }
+  .pc-motion .pc-m-hero .pc-m-wordmark,
+  .pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening .pc-m-wordmark {
+    top: 14%;
+    left: 5%;
+    right: 5%;
+  }
+  .pc-motion .pc-m-hero__bottom,
+  .pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening .pc-m-hero__bottom {
+    inset: 0;
+    display: block;
+    pointer-events: none;
+  }
+  .pc-motion .pc-m-hero__bottom > p {
+    position: absolute;
+    top: 35%;
+    left: 10%;
+    right: 10%;
+    max-width: 285px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+  .pc-motion .pc-m-hero .pc-m-button {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    translate: -50% 0;
+    min-height: 44px;
+    padding: 10px 20px;
+    font-size: 14px;
+    pointer-events: auto;
+  }
+}
+@media (max-width: 370px) {
+  .motion-nav .desktop-nav a,
+  .motion-nav .cart-button { padding-inline: 8px; font-size: 12px; }
+  .pc-motion .pc-m-product-copy h3,
+  .pc-motion.is-enhanced.has-motion .pc-m-product-copy h3 { font-size: 36px; }
+}
+
+/* The pinned opening layer suppresses pointer events outside its controls. */
+.pc-motion .pc-m-hero .motion-nav { pointer-events: auto; }
+
+/* Question tiles share the opening gradient and retain native details semantics. */
+.pc-motion .pc-m-faq {
+  display: block;
+  border-radius: 0;
+  padding: 92px 7.2% 100px;
+  background:
+    radial-gradient(ellipse 95% 115% at 0% 0%, #ae83e2 0%, #d09cde 38%, transparent 73%),
+    radial-gradient(ellipse 85% 110% at 100% 0%, #ff5f62 0%, #ff8673 42%, transparent 77%),
+    linear-gradient(180deg, #e29fc8 0%, #ffb982 55%, #ffd229 100%);
+}
+.pc-motion .pc-m-faq > h2 {
+  max-width: 950px;
+  margin: 0 auto 52px;
+  color: #fff;
+  font-size: 53px;
+  line-height: 1.06;
+  text-align: center;
+}
+.pc-motion .pc-m-faq-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 14px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.pc-motion .pc-m-faq-list details,
+.pc-motion .pc-m-faq-list details:first-child {
+  border: 0;
+  border-radius: 20px;
+  padding: 0;
+  background: #fff;
+  color: #17151b;
+  overflow: hidden;
+}
+.pc-motion .pc-m-faq-list summary {
+  min-height: 76px;
+  padding: 22px 26px;
+  color: #17151b;
+  font-family: var(--body);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -.035em;
+  gap: 18px;
+}
+.pc-motion .pc-m-faq-list summary > span {
+  flex: 0 0 auto;
+  font-family: var(--body);
+  font-size: 27px;
+  font-style: normal;
+  font-weight: 500;
+}
+.pc-motion .pc-m-faq-list details > div {
+  padding: 0 26px 24px;
+  color: #17151b;
+  font-size: 15px;
+  line-height: 1.6;
+}
+@media (max-width: 749px) {
+  .pc-motion .pc-m-faq { padding: 68px 5% 72px; }
+  .pc-motion .pc-m-faq > h2 {
+    margin-bottom: 32px;
+    font-size: clamp(34px, 9.5vw, 45px);
+  }
+  .pc-motion .pc-m-faq-list { grid-template-columns: 1fr; gap: 12px; }
+  .pc-motion .pc-m-faq-list summary {
+    min-height: 76px;
+    padding: 22px 20px;
+    font-size: 17px;
+  }
+  .pc-motion .pc-m-faq-list details > div { padding: 0 20px 22px; font-size: 14px; }
+}
+
+/* Final reference proportions within the unified scene. */
+.pc-motion .pc-m-floating-cart{position:fixed;right:24px;bottom:24px;z-index:15;display:flex;align-items:center;gap:16px;padding:12px 20px;border:1px solid #32106440;border-radius:99px;background:var(--pc-cream);color:var(--pc-purple);box-shadow:0 6px 24px #32106425;font:500 13px var(--body);text-decoration:none}
+.pc-motion.has-motion .pc-m-floating-cart{visibility:hidden;opacity:0;pointer-events:none}
+.pc-motion.has-motion.is-past-hero .pc-m-floating-cart{visibility:visible;opacity:1;pointer-events:auto}
+.pc-motion .pc-m-floating-cart:focus-visible{outline:3px solid var(--pc-purple);outline-offset:4px}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening .pc-m-product-copy h3{font-size:64px;line-height:1.04}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-row-label{font-family:var(--display);font-weight:400;font-size:32px;letter-spacing:-.015em}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-row-arrows button{border:0;border-radius:0;background:transparent;width:44px;height:44px;padding:6px}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-row-arrows button:hover{background:transparent;transform:scale(1.12)}
+.pc-motion .pc-m-row-arrows svg{width:32px;height:32px;display:block}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-wordmark,.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-hero__bottom,.pc-motion.is-enhanced.has-motion.has-continuity .motion-nav{filter:blur(calc((1 - var(--pc-opening-hero,1)) * 7px))}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening-sticky::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;background:url('assets/brand-swirl.svg') center/cover;opacity:calc((1 - var(--pc-opening-background,1)) * .13)}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening + .pc-m-arc{margin-top:-40svh;min-height:100svh;border-radius:48vw 48vw 0 0 / 35svh 35svh 0 0;padding-top:110px}
+@media(max-width:749px){
+.pc-motion .pc-m-hero__bottom,.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening .pc-m-hero__bottom{inset:34% 8% auto;display:flex;flex-direction:column;align-items:center;gap:18px}
+.pc-motion .pc-m-hero__bottom>p{position:static;margin:0;max-width:285px}
+.pc-motion .pc-m-hero .pc-m-button{position:static;translate:none}
+.pc-motion .pc-m-floating-cart,.floating-bag{right:16px;top:18px;bottom:auto;padding:10px 16px;font-size:12px}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-row-arrows{inset:73% 25% auto}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening .pc-m-product-copy h3{font-size:38px;line-height:1.06}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-row-label{font-size:27px}
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening + .pc-m-arc{padding-top:85px;border-radius:50% 50% 0 0 / 12svh 12svh 0 0}
+}

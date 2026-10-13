@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1000" width="1200" height="1000" fill="none">
+  <title>Original PapaCorn oversized popcorn outlines</title>
+  <defs>
+    <g id="kernel" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M109 66C94 40 109 15 138 22C155-4 195 1 207 28C237 10 270 23 279 55C311 50 335 82 319 111C346 132 343 169 312 184C324 216 306 247 275 250C277 282 242 305 214 287C187 315 151 308 142 278C108 297 76 277 70 247C36 247 23 218 41 193C14 180 13 151 35 141C15 121 46 104 74 101C68 95 92 69 109 66Z"/>
+      <path d="M111 112C98 97 103 76 120 70C132 65 145 72 148 82"/>
+      <path d="M219 82C237 67 263 80 264 102C264 113 258 121 249 127"/>
+      <path d="M149 247C162 224 193 222 210 239C220 250 220 264 213 276"/>
+    </g>
+  </defs>
+  <use href="#kernel" transform="translate(55 85) rotate(-16 170 150) scale(.97)"/>
+  <use href="#kernel" transform="translate(815 100) rotate(19 170 150) scale(.9)"/>
+  <use href="#kernel" transform="translate(430 600) rotate(-7 170 150) scale(1.08)"/>
+</svg>

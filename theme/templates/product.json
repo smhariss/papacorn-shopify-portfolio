@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "main": {
+      "type": "papacorn-product",
+      "settings": {
+        "pack_size": "50g",
+        "use_flavour_color": true,
+        "media_background": "#FFD229",
+        "media_ink": "#321064",
+        "bundle_url": "/pages/make-your-bundle"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,19 @@
+{% doc %}Renders branded navigation for PapaCorn inner pages.{% enddoc %}
+{% liquid
+  assign about_url = pages['about-us'].url | default: '/pages/about-us'
+  assign contact_url = pages['contact'].url | default: '/pages/contact'
+  assign bundle_url = pages['make-your-bundle'].url | default: '/pages/make-your-bundle'
+%}
+<header class="pc-site-header">
+  <div class="pc-site-header__inner">
+    <a class="pc-site-header__logo" href="{{ routes.root_url }}" aria-label="{{ 'papacorn.storefront.home' | t | escape }}">{% if settings.logo != blank %}{{ settings.logo | image_url: width: 500 | image_tag: widths: '250, 500', sizes: '190px', alt: 'PapaCorn', loading: 'eager' }}{% else %}PapaCorn{% endif %}</a>
+    <nav class="pc-site-header__nav" aria-label="{{ 'papacorn.navigation.label' | t | escape }}">
+      <a href="{{ routes.all_products_collection_url }}"{% if request.page_type == 'collection' %} aria-current="page"{% endif %}>{{ 'papacorn.storefront.shop' | t }}</a>
+      <a href="{{ bundle_url }}"{% if page.handle == 'make-your-bundle' %} aria-current="page"{% endif %}>{{ 'papacorn.storefront.bundle' | t }}</a>
+      <a href="{{ about_url }}"{% if page.handle == 'about-us' %} aria-current="page"{% endif %}>{{ 'papacorn.navigation.about' | t }}</a>
+      <a href="{{ contact_url }}"{% if page.handle == 'contact' %} aria-current="page"{% endif %}>{{ 'papacorn.storefront.contact' | t }}</a>
+    </nav>
+    <details class="pc-site-header__mobile"><summary>{{ 'papacorn.storefront.menu' | t }}</summary><nav aria-label="{{ 'papacorn.navigation.label' | t | escape }}"><a href="{{ routes.all_products_collection_url }}">{{ 'papacorn.storefront.shop' | t }}</a><a href="{{ bundle_url }}">{{ 'papacorn.storefront.bundle' | t }}</a><a href="{{ about_url }}">{{ 'papacorn.navigation.about' | t }}</a><a href="{{ contact_url }}">{{ 'papacorn.storefront.contact' | t }}</a></nav></details>
+    <a class="pc-site-header__bag" href="{{ routes.cart_url }}"{% if request.page_type == 'cart' %} aria-current="page"{% endif %}>{{ 'papacorn.navigation.bag' | t }} <span class="pc-site-header__count">{{ cart.item_count }}</span></a>
+  </div>
+</header>

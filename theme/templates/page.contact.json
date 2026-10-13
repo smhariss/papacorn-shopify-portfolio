@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "papacorn-contact",
+      "settings": {
+        "kicker": "We are all ears.",
+        "heading": "Let's talk\npopcorn.",
+        "intro": "Have a flavour question, a little feedback, or something else on your mind? We would love to hear it.",
+        "email": "contact@papacorn.pk"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

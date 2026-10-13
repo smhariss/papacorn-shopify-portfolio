@@ -1,0 +1,137 @@
+/* A full scroll journey: the panel rises into view, pins, then releases. */
+.pc-motion .pc-m-arc-sticky > .pc-m-eyebrow {
+  margin: 0 auto 32px;
+  text-align: center;
+}
+.pc-motion .pc-m-arc-caption {
+  max-width: 340px;
+  margin: 60px auto 0;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.pc-motion.has-motion .pc-m-word,
+.pc-motion.has-motion .pc-m-word.is-lit {
+  color: transparent;
+  background-image: linear-gradient(90deg, var(--pc-purple) var(--word-fill, 0%), #796b8e var(--word-fill, 0%));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: none;
+}
+.pc-motion.is-enhanced.has-motion .pc-m-arc,
+.pc-motion.is-enhanced.has-motion.has-continuity .pc-m-opening + .pc-m-arc {
+  position: relative;
+  height: calc(var(--pc-vh, 1svh) * 230);
+  min-height: 0;
+  padding: 0;
+  overflow: visible;
+  border-radius: 0;
+  background: transparent;
+  z-index: 2;
+  --arc-entry: 0;
+  --arc-progress: 0;
+  --arc-card-progress: 0;
+  --arc-track-x: 5vw;
+}
+.pc-motion.is-enhanced.has-motion .pc-m-arc-sticky {
+  position: sticky;
+  top: 0;
+  height: var(--pc-viewport-height, 100svh);
+  padding: 9svh 0 5svh;
+  overflow: clip;
+  isolation: isolate;
+  background: transparent;
+  border-radius: 0;
+}
+.pc-motion.is-enhanced.has-motion .pc-m-arc-sticky::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--pc-cream, #fff8e7);
+  border-radius: calc((1 - var(--arc-entry)) * 48vw) calc((1 - var(--arc-entry)) * 48vw) 0 0 / calc((1 - var(--arc-entry)) * 35svh) calc((1 - var(--arc-entry)) * 35svh) 0 0;
+}
+.pc-motion.is-enhanced.has-motion .pc-m-arc-sticky > .pc-m-eyebrow {
+  position: relative;
+  margin: 0 auto 22px;
+  padding: 0 5%;
+  text-align: center;
+}
+.pc-motion.is-enhanced.has-motion .pc-m-arc h2 {
+  position: relative;
+  max-width: 1020px;
+  padding: 0 5%;
+  margin: 0 auto 5svh;
+  font-size: clamp(42px, 4.6vw, 64px);
+  line-height: 1.12;
+}
+.pc-motion.is-enhanced.has-motion .pc-m-arc-cards {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: max-content;
+  min-height: 36svh;
+  padding: 0;
+  margin: 0;
+  gap: 28px;
+  overflow: visible;
+  perspective: none;
+  transform: translate3d(var(--arc-track-x), 0, 0);
+  will-change: transform;
+}
+.pc-motion.is-enhanced.has-motion .pc-m-arc-card,
+.pc-motion.is-enhanced.has-motion .pc-m-arc-card:nth-child(n) {
+  flex: 0 0 auto;
+  width: clamp(245px, 27vw, 390px);
+  height: 33svh;
+  max-height: 350px;
+  margin: 0;
+  border-radius: 22px;
+  transform: translateY(calc((var(--card-index) - 3) * (1 - var(--arc-card-progress)) * 9px)) rotate(calc((var(--card-index) - 3) * (3deg - var(--arc-card-progress) * 2deg)));
+  will-change: transform;
+}
+.pc-motion.is-enhanced.has-motion .arc-caption,
+.pc-motion.is-enhanced.has-motion .pc-m-arc-caption {
+  position: relative;
+  max-width: 360px;
+  margin: 4svh auto 0 !important;
+  padding: 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+}
+@media (max-width: 749px) {
+  .pc-motion.is-enhanced.has-motion .pc-m-arc-sticky {
+    padding-top: 11svh;
+  }
+  .pc-motion.is-enhanced.has-motion .pc-m-arc-sticky::before {
+    border-radius: calc((1 - var(--arc-entry)) * 50vw) calc((1 - var(--arc-entry)) * 50vw) 0 0 / calc((1 - var(--arc-entry)) * 12svh) calc((1 - var(--arc-entry)) * 12svh) 0 0;
+  }
+  .pc-motion.is-enhanced.has-motion .pc-m-arc-sticky > .pc-m-eyebrow {
+    max-width: 330px;
+    margin-bottom: 24px;
+    font-size: 9px;
+  }
+  .pc-motion.is-enhanced.has-motion .pc-m-arc h2 {
+    max-width: 440px;
+    padding: 0 7%;
+    margin-bottom: 4svh;
+    font-size: clamp(30px, 8.7vw, 41px);
+    line-height: 1.1;
+  }
+  .pc-motion.is-enhanced.has-motion .pc-m-arc-cards { gap: 22px; min-height: 35svh; }
+  .pc-motion.is-enhanced.has-motion .pc-m-arc-card:nth-child(n) {
+    width: 68vw;
+    height: 32svh;
+    max-height: 310px;
+    border-radius: 18px;
+  }
+  .pc-motion.is-enhanced.has-motion .arc-caption,
+  .pc-motion.is-enhanced.has-motion .pc-m-arc-caption {
+    max-width: 290px;
+    margin-top: 4svh !important;
+    font-size: 12px;
+  }
+}

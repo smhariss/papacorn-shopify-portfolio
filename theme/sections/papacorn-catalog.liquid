@@ -1,0 +1,20 @@
+<section class="pc-page pc-catalog"><div class="pc-container">
+  <div class="pc-catalog__intro"><div><p class="pc-kicker">{{ section.settings.eyebrow | escape }}</p><h1 class="pc-heading">{{ section.settings.heading | escape }}</h1></div><p>{{ section.settings.intro | escape }}</p></div>
+  <div class="pc-catalog__grid">{% for block in section.blocks %}{% liquid
+    assign flavour = block.settings.product
+    assign flavour_image = block.settings.cutout | default: flavour.featured_image
+    assign flavour_title = block.settings.fallback_title
+    assign flavour_price = block.settings.fallback_price | default: 150 | times: 100
+    if flavour != blank
+      assign flavour_title = flavour.title
+      assign flavour_price = flavour.price
+    endif
+  %}<article class="pc-catalog__card" style="--card-bg:{{ block.settings.background }};--card-ink:{{ block.settings.ink }}" {{ block.shopify_attributes }}>
+    <div class="pc-catalog__image">{% if flavour_image != blank %}{{ flavour_image | image_url: width: 800 | image_tag: widths: '400, 800', sizes: '(min-width: 750px) 30vw, 45vw', alt: flavour_title, loading: 'lazy' }}{% endif %}</div>
+    <div class="pc-catalog__copy"><h2>{{ flavour_title | escape }}</h2><p>{{ 'papacorn.product.pack_size' | t }} · {{ flavour_price | money }}</p>{% if flavour != blank %}<a class="pc-button" href="{{ flavour.url }}">{{ 'papacorn.storefront.view_flavour' | t }} <span aria-hidden="true">↗</span></a>{% else %}<button class="pc-button" type="button" disabled>{{ 'papacorn.product.coming_soon' | t }}</button>{% endif %}</div>
+  </article>{% endfor %}</div>
+  <div style="margin-top:48px;text-align:center"><a class="pc-button" href="{{ pages['make-your-bundle'].url | default: '/pages/make-your-bundle' }}">{{ 'papacorn.storefront.bundle' | t }} <span aria-hidden="true">↗</span></a></div>
+</div></section>
+{% schema %}
+{"name":"PapaCorn flavour catalog","settings":[{"type":"text","id":"eyebrow","label":"Eyebrow","default":"NINE FLAVOURS. YOUR KIND OF CRUNCH."},{"type":"text","id":"heading","label":"Heading","default":"Find your flavour."},{"type":"textarea","id":"intro","label":"Introduction","default":"Sweet, savoury or a little spicy. Explore all nine PapaCorn flavours, or build a mix that’s all you. Every bag is 50g, Rs. 150."}],"blocks":[{"type":"flavour","name":"Flavour","settings":[{"type":"product","id":"product","label":"Product"},{"type":"image_picker","id":"cutout","label":"Packet artwork"},{"type":"text","id":"fallback_title","label":"Draft preview name"},{"type":"number","id":"fallback_price","label":"Draft preview price","default":150},{"type":"color","id":"background","label":"Background","default":"#FFD229"},{"type":"color","id":"ink","label":"Text colour","default":"#321064"}]}],"max_blocks":9,"presets":[{"name":"PapaCorn flavour catalog"}]}
+{% endschema %}

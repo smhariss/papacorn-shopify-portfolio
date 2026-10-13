@@ -1,0 +1,26 @@
+{% doc %}
+Renders the homepage's left flyout navigation.
+@param {string} section_id - Homepage section ID for anchor links.
+{% enddoc %}
+{{ 'papacorn-home-menu.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'papacorn-home-menu.js' | asset_url }}" defer></script>
+<papacorn-home-menu>
+  <header class="pc-home-menu__bar">
+    <button class="pc-home-menu__trigger" type="button" data-home-menu-open aria-expanded="false" aria-controls="pc-home-menu-{{ section_id }}" hidden><svg viewBox="0 0 22 18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 3h20M1 9h15M1 15h20"/></svg>{{ 'papacorn.storefront.menu' | t }}</button>
+    <a class="pc-home-menu__bag" href="{{ routes.cart_url }}">{{ 'papacorn.navigation.bag' | t }}<span>{{ cart.item_count }}</span></a>
+  </header>
+  <dialog class="pc-home-menu__drawer" id="pc-home-menu-{{ section_id }}" data-home-menu-dialog aria-label="{{ 'papacorn.navigation.label' | t | escape }}">
+    <div class="pc-home-menu__top"><a class="pc-home-menu__logo" href="{{ routes.root_url }}" aria-label="{{ 'papacorn.storefront.home' | t | escape }}">{% if settings.logo != blank %}{{ settings.logo | image_url: width: 600 | image_tag: widths: '300, 600', sizes: '195px', alt: 'PapaCorn' }}{% else %}PapaCorn{% endif %}</a><button class="pc-home-menu__close" type="button" data-home-menu-close aria-label="{{ 'papacorn.storefront.close_menu' | t | escape }}">×</button></div>
+    <nav class="pc-home-menu__links" aria-label="{{ 'papacorn.navigation.label' | t | escape }}">
+      <a href="#pc-top-{{ section_id }}">{{ 'papacorn.storefront.home_link' | t }}<span aria-hidden="true">↗</span></a>
+      <a href="#pc-selector-{{ section_id }}">{{ 'papacorn.storefront.shop' | t }}<span aria-hidden="true">↗</span></a>
+      <a href="{{ pages['make-your-bundle'].url | default: '/pages/make-your-bundle' }}">{{ 'papacorn.storefront.bundle' | t }}<span aria-hidden="true">↗</span></a>
+      <a href="{{ pages['about-us'].url | default: '/pages/about-us' }}">{{ 'papacorn.navigation.about' | t }}<span aria-hidden="true">↗</span></a>
+      <a href="#pc-faq-{{ section_id }}">{{ 'papacorn.navigation.faq' | t }}<span aria-hidden="true">↗</span></a>
+      <a href="{{ pages['contact'].url | default: '/pages/contact' }}">{{ 'papacorn.storefront.contact' | t }}<span aria-hidden="true">↗</span></a>
+    </nav>
+    <div class="pc-home-menu__offer"><strong>{{ 'papacorn.storefront.offer_title' | t }}</strong>{{ 'papacorn.storefront.offer_copy' | t }}</div>
+    <a class="pc-home-menu__email" href="mailto:contact@papacorn.pk">contact@papacorn.pk</a>
+  </dialog>
+  <noscript><details class="pc-home-menu__fallback"><summary>{{ 'papacorn.storefront.menu' | t }}</summary><nav><a href="{{ routes.all_products_collection_url }}">{{ 'papacorn.storefront.shop' | t }}</a><a href="{{ pages['make-your-bundle'].url | default: '/pages/make-your-bundle' }}">{{ 'papacorn.storefront.bundle' | t }}</a><a href="{{ pages['about-us'].url | default: '/pages/about-us' }}">{{ 'papacorn.navigation.about' | t }}</a><a href="{{ pages['contact'].url | default: '/pages/contact' }}">{{ 'papacorn.storefront.contact' | t }}</a></nav></details></noscript>
+</papacorn-home-menu>

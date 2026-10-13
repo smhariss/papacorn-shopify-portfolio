@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "papacorn-cart",
+      "settings": {
+        "show_note": true,
+        "bundle_url": "/pages/make-your-bundle"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

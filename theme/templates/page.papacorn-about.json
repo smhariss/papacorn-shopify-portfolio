@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "main": {
+      "type": "papacorn-about",
+      "settings": {
+        "kicker": "This is PapaCorn.",
+        "heading": "A little crunch.\nA lot of character.",
+        "intro": "Sweet, savoury, and full of personality. PapaCorn brings nine flavours to the snack moments you make your own.",
+        "stamp": "Made for\nyour mood.",
+        "fact_1_value": "9",
+        "fact_1_label": "Flavours to explore",
+        "fact_2_value": "50g",
+        "fact_2_label": "In every bag",
+        "fact_3_value": "PKR 150",
+        "fact_3_label": "For each flavour",
+        "photo_note": "Good company. Great snack energy.",
+        "story_kicker": "For the moments in between.",
+        "story_heading": "Press play.\nPass the popcorn.",
+        "story_copy": "A movie on the sofa. A pause at your desk. A weekend with your favourite people. There is a PapaCorn flavour for whatever the moment feels like.",
+        "story_copy_2": "From Choc Corn and Butter Scotch to Cheese, BBQ, and Hot & Spicy, our range makes room for sweet cravings and savoury moods. Pick your favourite, or mix a few and find a new one.",
+        "closing_kicker": "Your flavours. Your way.",
+        "closing_heading": "Meet your\nnext snack mood.",
+        "closing_copy": "Choose the flavours and quantities you like. Every PapaCorn bag is 50g, at PKR 150 each.",
+        "shop_label": "Make your bundle",
+        "hero_image": "shopify://shop_images/papacorn-weekend-hangs.webp",
+        "story_image": "shopify://shop_images/papacorn-movie-night.webp",
+        "shop_link": "/pages/make-your-bundle"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

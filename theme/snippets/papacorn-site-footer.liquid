@@ -1,0 +1,9 @@
+{% doc %}Renders PapaCorn site links and the store's existing policy links.{% enddoc %}
+<div class="pc-site-footer{% if request.page_type == 'index' %} pc-site-footer--home{% endif %}"><div class="pc-container">
+  <div class="pc-site-footer__top">
+    <div class="pc-site-footer__brand"><a href="{{ routes.root_url }}" aria-label="{{ 'papacorn.storefront.home' | t | escape }}">{% if settings.logo != blank %}{{ settings.logo | image_url: width: 600 | image_tag: widths: '300, 600', sizes: '280px', alt: 'PapaCorn', loading: 'lazy' }}{% else %}PapaCorn{% endif %}</a><p>{{ 'papacorn.storefront.footer_copy' | t }}</p></div>
+    <div><p class="pc-site-footer__label">{{ 'papacorn.storefront.explore' | t }}</p><nav aria-label="{{ 'papacorn.storefront.explore' | t | escape }}"><a href="{{ routes.all_products_collection_url }}">{{ 'papacorn.storefront.shop' | t }}</a><a href="{{ pages['make-your-bundle'].url | default: '/pages/make-your-bundle' }}">{{ 'papacorn.storefront.bundle' | t }}</a><a href="{{ pages['about-us'].url | default: '/pages/about-us' }}">{{ 'papacorn.navigation.about' | t }}</a><a href="{{ pages['contact'].url | default: '/pages/contact' }}">{{ 'papacorn.storefront.contact' | t }}</a></nav></div>
+    <div><p class="pc-site-footer__label">{{ 'papacorn.storefront.say_hello' | t }}</p><a href="mailto:contact@papacorn.pk">contact@papacorn.pk</a></div>
+  </div>
+  <div class="pc-site-footer__bottom"><span>© {{ 'now' | date: '%Y' }} PapaCorn</span><nav class="pc-site-footer__policies" aria-label="{{ 'papacorn.footer.policy_label' | t | escape }}">{% for policy in shop.policies %}{% if policy.body != blank %}<a href="{{ policy.url }}">{{ policy.title | escape }}</a>{% endif %}{% endfor %}</nav><span>{{ 'papacorn.footer.tagline' | t }}</span></div>
+</div></div>

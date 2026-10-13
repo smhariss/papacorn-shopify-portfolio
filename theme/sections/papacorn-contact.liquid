@@ -1,0 +1,71 @@
+{{ 'papacorn-information.css' | asset_url | stylesheet_tag }}
+{% liquid
+  assign contact_form_id = 'ContactForm-' | append: section.id
+%}
+<section class="pc-page pc-contact" aria-labelledby="pc-contact-heading-{{ section.id }}">
+  <div class="pc-container pc-contact__grid">
+    <div class="pc-contact__intro">
+      <p class="pc-kicker">{{ section.settings.kicker | escape }}</p>
+      <h1 class="pc-heading pc-contact__heading" id="pc-contact-heading-{{ section.id }}">{{ section.settings.heading | escape | newline_to_br }}</h1>
+      <p class="pc-contact__lead">{{ section.settings.intro | escape | newline_to_br }}</p>
+      {% if section.settings.email != blank %}
+        <div class="pc-contact__email-block">
+          <p class="pc-kicker">{{ 'papacorn.contact.email_direct' | t }}</p>
+          <a class="pc-contact__email" href="mailto:{{ section.settings.email | strip | escape }}">{{ section.settings.email | escape }}</a>
+        </div>
+      {% endif %}
+      <span class="pc-contact__star" aria-hidden="true">✳</span>
+    </div>
+    <div class="pc-contact__form-panel">
+      <h2 class="pc-contact__form-heading">{{ 'papacorn.contact.form_heading' | t }}</h2>
+      <p class="pc-contact__required" id="{{ contact_form_id }}-required">{{ 'papacorn.contact.required' | t }}</p>
+      {% form 'contact', id: contact_form_id, class: 'pc-contact__form' %}
+        {% if form.posted_successfully? %}
+          <div class="pc-contact__notice pc-contact__notice--success" role="status" tabindex="-1">
+            <p>{{ 'papacorn.contact.success' | t }}</p>
+          </div>
+        {% elsif form.errors %}
+          <div class="pc-contact__notice pc-contact__notice--error" role="alert" tabindex="-1">
+            <p>{{ 'papacorn.contact.error_heading' | t }}</p>
+            {{ form.errors | default_errors }}
+          </div>
+        {% endif %}
+        <div class="pc-contact__fields">
+          <div class="pc-contact__field">
+            <label for="{{ contact_form_id }}-name">{{ 'papacorn.contact.name' | t }} <span aria-hidden="true">*</span></label>
+            <input id="{{ contact_form_id }}-name" type="text" name="contact[name]" autocomplete="name" value="{{ form.name | default: customer.name | escape }}" required aria-describedby="{{ contact_form_id }}-required">
+          </div>
+          <div class="pc-contact__field">
+            <label for="{{ contact_form_id }}-email">{{ 'papacorn.contact.email' | t }} <span aria-hidden="true">*</span></label>
+            <input id="{{ contact_form_id }}-email" type="email" name="contact[email]" autocomplete="email" autocapitalize="off" value="{{ form.email | default: customer.email | escape }}" required {% if form.errors contains 'email' %}aria-invalid="true" aria-describedby="{{ contact_form_id }}-email-error"{% else %}aria-describedby="{{ contact_form_id }}-required"{% endif %}>
+            {% if form.errors contains 'email' %}
+              <p class="pc-contact__field-error" id="{{ contact_form_id }}-email-error">{{ form.errors.translated_fields.email | capitalize | escape }} {{ form.errors.messages.email | escape }}</p>
+            {% endif %}
+          </div>
+          <div class="pc-contact__field pc-contact__field--wide">
+            <label for="{{ contact_form_id }}-order">{{ 'papacorn.contact.order_number' | t }}</label>
+            <input id="{{ contact_form_id }}-order" type="text" name="contact[order_number]" value="{{ form.order_number | escape }}" aria-describedby="{{ contact_form_id }}-order-hint">
+            <p class="pc-contact__hint" id="{{ contact_form_id }}-order-hint">{{ 'papacorn.contact.order_hint' | t }}</p>
+          </div>
+          <div class="pc-contact__field pc-contact__field--wide">
+            <label for="{{ contact_form_id }}-message">{{ 'papacorn.contact.message' | t }} <span aria-hidden="true">*</span></label>
+            <textarea id="{{ contact_form_id }}-message" name="contact[body]" rows="6" required aria-describedby="{{ contact_form_id }}-required">{{ form.body | escape }}</textarea>
+          </div>
+        </div>
+        <button class="pc-button pc-contact__submit" type="submit">{{ 'papacorn.contact.submit' | t }} <span aria-hidden="true">↗</span></button>
+      {% endform %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "PapaCorn Contact",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Eyebrow", "default": "We are all ears." },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Let's talk\npopcorn." },
+    { "type": "textarea", "id": "intro", "label": "Introduction", "default": "Have a flavour question, a little feedback, or something else on your mind? We would love to hear it." },
+    { "type": "text", "id": "email", "label": "Public contact email", "default": "contact@papacorn.pk" }
+  ],
+  "presets": [{ "name": "PapaCorn Contact" }]
+}
+{% endschema %}

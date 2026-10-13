@@ -1,0 +1,650 @@
+{{ 'papacorn-homepage.css' | asset_url | stylesheet_tag }}
+{{ 'papacorn-motion-overrides.css' | asset_url | stylesheet_tag }}
+{{ 'papacorn-continuity.css' | asset_url | stylesheet_tag }}
+{{ 'papacorn-reference-style.css' | asset_url | stylesheet_tag }}
+{{ 'papacorn-brand-refresh.css' | asset_url | stylesheet_tag }}
+{{ 'papacorn-arc-scroll.css' | asset_url | stylesheet_tag }}
+{% if section.settings.use_brand_fonts %}
+<style>
+  @font-face { font-family: PapaCornDisplay; src: url('{{ 'SpicyRice-Regular.ttf' | asset_url }}') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: PapaCornBody; src: url('{{ 'Bounded-Medium.otf' | asset_url }}') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+</style>
+{% endif %}
+<script src="{{ 'papacorn-homepage.js' | asset_url }}" defer></script>
+{% liquid
+  assign product_count = 0
+  for block in section.blocks
+    if block.settings.product != blank or block.settings.cutout != blank and block.settings.fallback_title != blank
+      assign product_count = product_count | plus: 1
+    endif
+  endfor
+  assign shop_url = section.settings.shop_link | default: routes.all_products_collection_url
+  assign selected_template = 'papacorn.carousel.selected' | t: product: '[product]'
+%}
+<papacorn-homepage id="pc-top-{{ section.id }}" class="pc-motion" data-motion="{{ section.settings.enable_motion }}" data-selected-template="{{ selected_template | escape }}" style="--pc-purple: {{ section.settings.purple }}; --pc-yellow: {{ section.settings.yellow }}; --pc-cream: {{ section.settings.cream }}; --pc-display: {% if section.settings.use_brand_fonts %}'PapaCornDisplay', {% endif %}'Arial Black', sans-serif; --pc-body: {% if section.settings.use_brand_fonts %}'PapaCornBody', {% endif %}Arial, sans-serif;">
+  {% if section.settings.show_reference_menu %}{% render 'papacorn-home-menu', section_id: section.id %}{% endif %}
+  <div class="pc-m-opening" data-pc-opening><div class="pc-m-opening-sticky">
+  <section class="pc-m-hero" aria-labelledby="pc-brand-{{ section.id }}">
+    <p class="pc-m-eyebrow pc-m-hero__eyebrow">{{ section.settings.hero_eyebrow | escape }}</p>
+    <h1 class="pc-m-wordmark" id="pc-brand-{{ section.id }}">
+      {% if section.settings.wordmark != blank %}<span class="pc-m-sr">{{ section.settings.brand_name | escape }}</span>{{ section.settings.wordmark | image_url: width: 2200 | image_tag: widths: '600, 1000, 1600, 2200', sizes: '92vw', alt: '', loading: 'eager' }}{% else %}{{ section.settings.brand_name | escape }}{% endif %}
+    </h1>
+    <div class="pc-m-hero__packets" aria-hidden="true">
+      {% for hero_index in (1..3) %}
+        {% liquid
+          assign hero_image_key = 'hero_packet_' | append: hero_index
+          assign hero_packet = section.settings[hero_image_key]
+        %}
+        {% if hero_packet != blank %}<div class="pc-m-hero__packet pc-m-hero__packet--{{ hero_index }}"><div>{{ hero_packet | image_url: width: 900 | image_tag: widths: '300, 500, 700, 900', sizes: '(min-width: 750px) 44vw, 67vw', loading: 'eager', alt: '' }}</div></div>{% endif %}
+      {% endfor %}
+    </div>
+    <div class="pc-m-hero__bottom"><p>{{ section.settings.hero_tagline | escape }}</p><a class="pc-m-button" href="{% if product_count > 0 %}#pc-selector-{{ section.id }}{% else %}{{ shop_url }}{% endif %}">{{ section.settings.hero_cta | escape }} <span aria-hidden="true">↓</span></a></div>
+    {% if request.design_mode and section.settings.hero_packet_1 == blank %}<p class="pc-m-editor">{{ 'papacorn.editor.hero' | t }}</p>{% endif %}
+  </section>
+  {% if product_count > 0 %}
+    <section class="pc-m-sequence" id="pc-selector-{{ section.id }}" data-pc-sequence aria-labelledby="pc-selector-title-{{ section.id }}">
+      <div class="pc-m-selector-sticky">
+        <div class="pc-m-intro"><h2>{{ section.settings.intro_heading | escape }}</h2><div class="pc-m-intro-lineup" aria-hidden="true">{% for block in section.blocks %}{% liquid
+          assign lineup_product = block.settings.product
+          assign lineup_image = block.settings.cutout | default: lineup_product.featured_image
+        %}{% if lineup_product != blank or block.settings.cutout != blank and block.settings.fallback_title != blank %}{% if lineup_image != blank %}{{ lineup_image | image_url: width: 350 | image_tag: widths: '150, 250, 350', sizes: '(min-width: 750px) 12vw, 20vw', loading: 'lazy', alt: '' }}{% endif %}{% endif %}{% endfor %}</div><div class="pc-m-row-arrows"><button type="button" data-pc-row-previous aria-label="{{ 'papacorn.carousel.previous' | t | escape }}"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M24 4L8 16L24 28Z"/></svg></button><button type="button" data-pc-row-next aria-label="{{ 'papacorn.carousel.next' | t | escape }}"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 4L24 16L8 28Z"/></svg></button></div><p class="pc-m-row-label" data-pc-row-label></p></div>
+        <div class="pc-m-selector-stage" data-pc-selector-stage>
+          <h2 class="pc-m-sr" id="pc-selector-title-{{ section.id }}">{{ section.settings.selector_heading | escape }}</h2>
+          <div class="pc-m-panels">
+            {% assign visible_index = 0 %}
+            {% for block in section.blocks %}
+              {% if block.settings.product != blank or block.settings.cutout != blank and block.settings.fallback_title != blank %}
+                {% liquid
+                  assign visible_index = visible_index | plus: 1
+                  assign selected_product = block.settings.product
+                  assign packet_image = block.settings.cutout | default: selected_product.featured_image
+                  assign selected_title = block.settings.fallback_title
+                  assign selected_price = block.settings.fallback_price | default: 150 | times: 100
+                  if selected_product != blank
+                    assign selected_title = selected_product.title
+                    assign selected_price = selected_product.price
+                  endif
+                  assign panel_id = 'pc-panel-' | append: section.id | append: '-' | append: block.id
+                %}
+                <article class="pc-m-product-panel" id="{{ panel_id }}" data-pc-panel data-product-title="{{ selected_title | escape }}" data-background="{{ block.settings.background }}" data-ink="{{ block.settings.ink }}" style="--pc-flavour: {{ block.settings.background }}; --pc-ink: {{ block.settings.ink }};" {{ block.shopify_attributes }}>
+                  <div class="pc-m-product-copy"><p class="pc-m-eyebrow">{{ section.settings.selector_heading | escape }} · {{ visible_index }} / {{ product_count }}</p><h3>{{ selected_title | escape }}</h3><p class="pc-m-product-description">{{ block.settings.description | escape }}</p><p class="pc-m-product-price">{{ 'papacorn.product.pack_size' | t }} · {% if selected_product.price_varies %}{{ 'papacorn.product.from' | t }} {% endif %}{{ selected_price | money }}</p>{% render 'papacorn-native-product-action', action_product: selected_product, section_id: section.id, card_id: block.id %}</div>
+                  <div class="pc-m-product-packet">{% if packet_image != blank %}{{ packet_image | image_url: width: 1400 | image_tag: widths: '400, 700, 1000, 1400', sizes: '(min-width: 750px) 54vw, 88vw', loading: 'lazy', alt: selected_title }}{% else %}{{ 'product-1' | placeholder_svg_tag }}{% endif %}</div>
+                </article>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="pc-m-selector-controls">
+            <div class="pc-m-tabs" data-pc-tabs aria-label="{{ 'papacorn.carousel.label' | t | escape }}">
+              {% for block in section.blocks %}
+                {% if block.settings.product != blank or block.settings.cutout != blank and block.settings.fallback_title != blank %}
+                  {% liquid
+                    assign tab_product = block.settings.product
+                    assign tab_image = block.settings.cutout | default: tab_product.featured_image
+                    assign tab_title = block.settings.fallback_title
+                    if tab_product != blank
+                      assign tab_title = tab_product.title
+                    endif
+                  %}
+                  <a class="pc-m-tab" data-pc-tab href="#pc-panel-{{ section.id }}-{{ block.id }}" aria-label="{{ 'papacorn.carousel.choose' | t: product: tab_title | escape_once }}">{% if tab_image != blank %}{{ tab_image | image_url: width: 180 | image_tag: widths: '90, 180', sizes: '65px', loading: 'lazy', alt: '' }}{% else %}<span>{{ tab_title | escape }}</span>{% endif %}</a>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="pc-m-arrows" data-pc-arrows hidden><button type="button" data-pc-previous aria-label="{{ 'papacorn.carousel.previous' | t | escape }}">←</button><button type="button" data-pc-next aria-label="{{ 'papacorn.carousel.next' | t | escape }}">→</button></div>
+          </div>
+          <p class="pc-m-sr" data-pc-selected-status role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+  {% elsif request.design_mode %}<p class="pc-m-editor">{{ 'papacorn.editor.products' | t }}</p>{% endif %}
+  </div></div>
+  <section class="pc-m-arc" id="pc-story-{{ section.id }}" data-pc-reveal aria-labelledby="pc-arc-title-{{ section.id }}">
+    <div class="pc-m-arc-sticky">
+    <p class="pc-m-eyebrow">{{ section.settings.arc_eyebrow | escape }}</p>
+    <h2 id="pc-arc-title-{{ section.id }}" data-pc-word-reveal>{{ section.settings.arc_heading | escape }}</h2>
+    <div class="pc-m-arc-cards">{% for arc_index in (1..5) %}{% liquid
+      assign arc_image_key = 'arc_image_' | append: arc_index
+      assign arc_image = section.settings[arc_image_key]
+    %}{% if arc_image != blank %}<div class="pc-m-arc-card" style="--card-index: {{ arc_index }};">{{ arc_image | image_url: width: 700 | image_tag: widths: '250, 400, 700', sizes: '(min-width: 750px) 24vw, 59vw', loading: 'lazy' }}</div>{% endif %}{% endfor %}</div>
+    <p class="pc-m-arc-caption">{{ section.settings.arc_caption | escape }}</p>
+    </div>
+  </section>
+  <section class="pc-m-story-sequence" data-pc-story aria-label="{{ 'papacorn.story.label' | t | escape }}">
+    <div class="pc-m-story-sticky">{% for story_index in (1..3) %}{% liquid
+      assign story_image_key = 'story_image_' | append: story_index
+      assign story_title_key = 'story_title_' | append: story_index
+      assign story_copy_key = 'story_copy_' | append: story_index
+      assign story_image = section.settings[story_image_key]
+    %}
+      <article class="pc-m-story-card" data-pc-story-card><div class="pc-m-story-copy"><p class="pc-m-eyebrow">{{ 'papacorn.story.chapter' | t }} {{ story_index }} / 3</p><h2>{{ section.settings[story_title_key] | escape }}</h2><p>{{ section.settings[story_copy_key] | escape }}</p><a class="pc-m-story-shop" href="{% if product_count > 0 %}#pc-selector-{{ section.id }}{% else %}{{ shop_url }}{% endif %}">{{ section.settings.hero_cta | escape }} <span aria-hidden="true">↗</span></a></div><div class="pc-m-story-image">{% if story_image != blank %}{{ story_image | image_url: width: 1400 | image_tag: widths: '400, 700, 1000, 1400', sizes: '(min-width: 750px) 44vw, 90vw', loading: 'lazy' }}{% else %}<span aria-hidden="true">✳</span>{% endif %}</div></article>
+    {% endfor %}</div>
+  </section>
+  <section class="pc-m-benefits" data-pc-reveal aria-labelledby="pc-benefits-title-{{ section.id }}"><p class="pc-m-eyebrow">{{ section.settings.benefits_eyebrow | escape }}</p><h2 id="pc-benefits-title-{{ section.id }}">{{ section.settings.benefits_heading_1 | escape }}<br>{{ section.settings.benefits_heading_2 | escape }}</h2><div class="pc-m-benefit-grid">{% for benefit_index in (1..3) %}{% liquid
+    assign benefit_title_key = 'benefit_title_' | append: benefit_index
+    assign benefit_copy_key = 'benefit_copy_' | append: benefit_index
+  %}<div class="pc-m-benefit" style="--benefit-index: {{ benefit_index }};"><span aria-hidden="true">✳</span><h3>{{ section.settings[benefit_title_key] | escape }}</h3><p>{{ section.settings[benefit_copy_key] | escape }}</p></div>{% endfor %}</div></section>
+  <section class="pc-m-faq" id="pc-faq-{{ section.id }}" aria-labelledby="pc-faq-title-{{ section.id }}"><h2 id="pc-faq-title-{{ section.id }}">{{ section.settings.faq_heading | escape }}</h2><div class="pc-m-faq-list">{% for faq_index in (1..6) %}{% liquid
+  assign faq_question_key = 'faq_question_' | append: faq_index
+  assign faq_answer_key = 'faq_answer_' | append: faq_index
+%}{% if section.settings[faq_question_key] != blank %}<details><summary>{{ section.settings[faq_question_key] | escape }}<span aria-hidden="true">+</span></summary><div>{{ section.settings[faq_answer_key] }}</div></details>{% endif %}{% endfor %}</div></section>
+  <section class="pc-m-final" aria-labelledby="pc-final-title-{{ section.id }}"><h2 id="pc-final-title-{{ section.id }}">{{ section.settings.final_heading | escape }}</h2><a class="pc-m-button" href="{{ shop_url }}">{{ section.settings.final_cta | escape }} <span aria-hidden="true">↗</span></a><div class="pc-m-final-wordmark" aria-hidden="true">{% if section.settings.wordmark != blank %}{{ section.settings.wordmark | image_url: width: 2200 | image_tag: widths: '600, 1000, 1600, 2200', sizes: '94vw', loading: 'lazy', alt: '' }}{% else %}{{ section.settings.brand_name | escape }}{% endif %}</div></section>
+  <a class="pc-m-floating-cart" href="{{ routes.cart_url }}">{{ 'papacorn.navigation.bag' | t }} <span aria-hidden="true">↗</span></a>
+</papacorn-homepage>
+{% schema %}
+{
+  "name": "PapaCorn motion homepage",
+  "tag": "section",
+  "class": "papacorn-motion-section",
+  "enabled_on": {
+    "templates": [
+      "index"
+    ]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_reference_menu",
+      "label": "Show pill navigation",
+      "info": "Use this with the theme header hidden on the homepage, or disable to keep your theme header.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "use_brand_fonts",
+      "label": "Load PapaCorn display and Bounded fonts",
+      "info": "Loads bundled open-license fonts from your Shopify CDN. Disable to use system fonts.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_motion",
+      "label": "Enable scroll choreography",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand name",
+      "default": "PapaCorn"
+    },
+    {
+      "type": "image_picker",
+      "id": "wordmark",
+      "label": "Transparent PapaCorn wordmark"
+    },
+    {
+      "type": "color",
+      "id": "purple",
+      "label": "Deep purple",
+      "default": "#321064"
+    },
+    {
+      "type": "color",
+      "id": "yellow",
+      "label": "Butter yellow",
+      "default": "#FFD229"
+    },
+    {
+      "type": "color",
+      "id": "cream",
+      "label": "Warm cream",
+      "default": "#FFF8E7"
+    },
+    {
+      "type": "url",
+      "id": "shop_link",
+      "label": "Shop collection link"
+    },
+    {
+      "type": "header",
+      "content": "Fullscreen hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Hero eyebrow",
+      "default": "POPCORN WITH PERSONALITY"
+    },
+    {
+      "type": "text",
+      "id": "hero_tagline",
+      "label": "Hero tagline",
+      "default": "Big flavour. Bigger crunch."
+    },
+    {
+      "type": "text",
+      "id": "hero_cta",
+      "label": "Hero shop label",
+      "default": "Find your flavour"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_packet_1",
+      "label": "Left transparent packet"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_packet_2",
+      "label": "Middle transparent packet"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_packet_3",
+      "label": "Right transparent packet"
+    },
+    {
+      "type": "header",
+      "content": "Pinned flavour selector"
+    },
+    {
+      "type": "text",
+      "id": "intro_heading",
+      "label": "Scroll introduction",
+      "default": "NINE FLAVOURS. EVERY KIND OF MOOD."
+    },
+    {
+      "type": "text",
+      "id": "selector_heading",
+      "label": "Selector label",
+      "default": "PICK YOUR POP"
+    },
+    {
+      "type": "header",
+      "content": "Word reveal and image arc"
+    },
+    {
+      "type": "textarea",
+      "id": "arc_heading",
+      "label": "Word reveal headline",
+      "default": "A little sweet. A little salty. A whole lot of personality."
+    },
+    {
+      "type": "text",
+      "id": "arc_eyebrow",
+      "label": "Image arc eyebrow",
+      "default": "POPCORN FOR YOUR KIND OF PEOPLE."
+    },
+    {
+      "type": "text",
+      "id": "arc_caption",
+      "label": "Image arc caption",
+      "default": "For the big nights. The little breaks. And everything in between."
+    },
+    {
+      "type": "image_picker",
+      "id": "arc_image_1",
+      "label": "Arc image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "arc_image_2",
+      "label": "Arc image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "arc_image_3",
+      "label": "Arc image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "arc_image_4",
+      "label": "Arc image 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "arc_image_5",
+      "label": "Arc image 5"
+    },
+    {
+      "type": "header",
+      "content": "Three storytelling chapters"
+    },
+    {
+      "type": "text",
+      "id": "story_title_1",
+      "label": "Chapter 1 title",
+      "default": "FOR THE MAIN CHARACTER MOMENTS."
+    },
+    {
+      "type": "textarea",
+      "id": "story_copy_1",
+      "label": "Chapter 1 copy",
+      "default": "Movie on. Phone down. A bag of your favourite PapaCorn. Make the snack break yours."
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image_1",
+      "label": "Chapter 1 photo"
+    },
+    {
+      "type": "text",
+      "id": "story_title_2",
+      "label": "Chapter 2 title",
+      "default": "TAKE A BREAK. MAKE IT POP."
+    },
+    {
+      "type": "textarea",
+      "id": "story_copy_2",
+      "label": "Chapter 2 copy",
+      "default": "Between the big plans and the everyday things, bring a little flavour to your me-time."
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image_2",
+      "label": "Chapter 2 photo"
+    },
+    {
+      "type": "text",
+      "id": "story_title_3",
+      "label": "Chapter 3 title",
+      "default": "GOOD COMPANY. GREAT CRUNCH."
+    },
+    {
+      "type": "textarea",
+      "id": "story_copy_3",
+      "label": "Chapter 3 copy",
+      "default": "Friends over? Pick a few flavours for the table. There’s a different PapaCorn mood for everyone."
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image_3",
+      "label": "Chapter 3 photo"
+    },
+    {
+      "type": "header",
+      "content": "Product details reveal"
+    },
+    {
+      "type": "text",
+      "id": "benefits_eyebrow",
+      "label": "Details eyebrow",
+      "default": "YOUR SNACK, YOUR WAY"
+    },
+    {
+      "type": "text",
+      "id": "benefits_heading_1",
+      "label": "Details heading first line",
+      "default": "SMALL BAG."
+    },
+    {
+      "type": "text",
+      "id": "benefits_heading_2",
+      "label": "Details heading second line",
+      "default": "BIG PERSONALITY."
+    },
+    {
+      "type": "text",
+      "id": "benefit_title_1",
+      "label": "Detail 1 title",
+      "default": "9 FLAVOURS"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_copy_1",
+      "label": "Detail 1 copy",
+      "default": "Chocolate to cheese. Sweet to spicy. Pick the flavour you’re feeling."
+    },
+    {
+      "type": "text",
+      "id": "benefit_title_2",
+      "label": "Detail 2 title",
+      "default": "50g BAGS"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_copy_2",
+      "label": "Detail 2 copy",
+      "default": "Your popcorn, in the bag size you know and love."
+    },
+    {
+      "type": "text",
+      "id": "benefit_title_3",
+      "label": "Detail 3 title",
+      "default": "YOUR MIX"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_copy_3",
+      "label": "Detail 3 copy",
+      "default": "Choose bags individually and build your own flavour combination."
+    },
+    {
+      "type": "header",
+      "content": "Frequently asked questions"
+    },
+    {
+      "type": "text",
+      "id": "faq_heading",
+      "label": "FAQ title",
+      "default": "GOOD TO KNOW."
+    },
+    {
+      "type": "text",
+      "id": "faq_question_1",
+      "label": "First question",
+      "default": "What size are the bags?"
+    },
+    {
+      "type": "richtext",
+      "id": "faq_answer_1",
+      "label": "First answer",
+      "default": "<p>Every PapaCorn flavour in this range comes in a 50g bag. See the current price beside your selected flavour.</p>"
+    },
+    {
+      "type": "text",
+      "id": "faq_question_2",
+      "label": "Second question",
+      "default": "Can I choose different flavours?"
+    },
+    {
+      "type": "richtext",
+      "id": "faq_answer_2",
+      "label": "Second answer",
+      "default": "<p>Yes. Add your favourite bags individually to create your own combination.</p>"
+    },
+    {
+      "type": "text",
+      "id": "faq_question_3",
+      "label": "Question 3",
+      "default": "Can I build my own bundle?"
+    },
+    {
+      "type": "richtext",
+      "id": "faq_answer_3",
+      "label": "Answer 3",
+      "default": "<p>Yes. Choose any PapaCorn flavours and set the number of bags you want on the Make Your Bundle page.</p>"
+    },
+    {
+      "type": "text",
+      "id": "faq_question_4",
+      "label": "Question 4",
+      "default": "How does the 20% bundle offer work?"
+    },
+    {
+      "type": "richtext",
+      "id": "faq_answer_4",
+      "label": "Answer 4",
+      "default": "<p>Buy 5 or more PapaCorn bags in any flavour mix to get 20% off automatically. Five Rs. 150 bags cost Rs. 600 after the discount. Shipping is separate.</p>"
+    },
+    {
+      "type": "text",
+      "id": "faq_question_5",
+      "label": "Question 5",
+      "default": "Can I choose several bags of one flavour?"
+    },
+    {
+      "type": "richtext",
+      "id": "faq_answer_5",
+      "label": "Answer 5",
+      "default": "<p>Yes. You can repeat your favourite flavour or mix different ones. The 20% offer counts bags, so any combination of 5 or more qualifies.</p>"
+    },
+    {
+      "type": "text",
+      "id": "faq_question_6",
+      "label": "Question 6",
+      "default": "How can I contact PapaCorn?"
+    },
+    {
+      "type": "richtext",
+      "id": "faq_answer_6",
+      "label": "Answer 6",
+      "default": "<p>Email <a href=\"mailto:contact@papacorn.pk\">contact@papacorn.pk</a>, or use the form on our Contact page.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Closing wordmark"
+    },
+    {
+      "type": "text",
+      "id": "final_heading",
+      "label": "Closing heading",
+      "default": "LET’S GET POPPING."
+    },
+    {
+      "type": "text",
+      "id": "final_cta",
+      "label": "Closing shop label",
+      "default": "Shop all flavours"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Flavour",
+      "limit": 9,
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Real Shopify product"
+        },
+        {
+          "type": "image_picker",
+          "id": "cutout",
+          "label": "Transparent packet cutout"
+        },
+        {
+          "type": "text",
+          "id": "fallback_title",
+          "label": "Preview flavour name",
+          "info": "Shown with the cutout while the selected product is unavailable to the storefront."
+        },
+        {
+          "type": "number",
+          "id": "fallback_price",
+          "label": "Preview price (PKR)",
+          "default": 150,
+          "info": "The real product's price is used as soon as it is available to the storefront."
+        },
+        {
+          "type": "color",
+          "id": "background",
+          "label": "Flavour background",
+          "default": "#FFD229"
+        },
+        {
+          "type": "color",
+          "id": "ink",
+          "label": "Flavour text colour",
+          "default": "#321064",
+          "info": "Use cream on dark flavours and purple on light flavours. Check readable contrast."
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Flavour description",
+          "default": "Meet your next popcorn mood."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 9,
+  "presets": [
+    {
+      "name": "PapaCorn motion homepage",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Choc Corn",
+            "background": "#633629",
+            "ink": "#FFF8E7",
+            "description": "For the chocolate kind of craving."
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Butter Scotch",
+            "background": "#D99A36",
+            "ink": "#321064",
+            "description": "Sweet moments, with a butter scotch twist."
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Caramel Peanut",
+            "background": "#C78F62",
+            "ink": "#321064",
+            "description": "Caramel and peanut. A snack mood of its own."
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Sweet & Salted",
+            "background": "#17B8AF",
+            "ink": "#321064",
+            "description": "Two moods. One bag. Sweet meets salted."
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Plain",
+            "background": "#1767A3",
+            "ink": "#FFF8E7",
+            "description": "Keep it simple. Keep it popping."
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Toffee",
+            "background": "#E77B2D",
+            "ink": "#321064",
+            "description": "Bring the toffee mood to your snack break."
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Cheese",
+            "background": "#F5B91F",
+            "ink": "#321064",
+            "description": "A little cheesy. A whole lot of personality."
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "fallback_title": "BBQ",
+            "background": "#292631",
+            "ink": "#FFF8E7",
+            "description": "Meet your savoury BBQ snack mood."
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "fallback_title": "Hot & Spicy",
+            "background": "#D3303E",
+            "ink": "#FFF8E7",
+            "description": "Turn up the flavour with Hot & Spicy."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
